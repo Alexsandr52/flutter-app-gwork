@@ -23,6 +23,7 @@ class _AuthFormState extends State<AuthForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: constBackgroundColor,
+      
       appBar: AppBar(
           backgroundColor: navBarsColor,
           title: Text('InjuryInsight'),
@@ -30,109 +31,123 @@ class _AuthFormState extends State<AuthForm> {
           actions: [IconButton(onPressed: () {}, icon: Icon(Icons.person_2_outlined))],
           centerTitle: true,
         ),
+      
       body: SingleChildScrollView(
-        
         child: Padding( 
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 60),
-          child: Form(
-            key: _formfield,
-            
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                
-                //Email
-                SizedBox(height: 50),
-                TextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  controller: emailController,
-                  decoration:  InputDecoration(
-                    labelText: "Email",
-                    border: OutlineInputBorder(),
-                    prefix: Icon(Icons.email),
-                  ),
-                  validator:  (value){
-                    if (value!.isEmpty){return "Enter email";}
-                    bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value);
-                    if (!emailValid){return "Enter valid email";}
-                  },
-                ),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 80),
+          child: Container(
+            decoration: BoxDecoration(
+              color: boxesColor,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
 
-                //Пароль
-                SizedBox(height: 20),
-                TextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  controller: passController,
-                  obscureText: passToggle,
-                  decoration:  InputDecoration(
-                    labelText: "Password",
-                    border: OutlineInputBorder(),
-                    prefix: Icon(Icons.lock),
-                    suffixIcon: InkWell(
-                      onTap: (){
-                        setState(() {
-                          passToggle = !passToggle;
-                        });
-                      },
-                      child: Icon(passToggle ? Icons.visibility : Icons.visibility_off),
+            child: Form(
+              key: _formfield,
+              
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  
+                  //Email
+                  SizedBox(height: 30),
+                  TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    controller: emailController,
+                    decoration:  InputDecoration(
+                      labelStyle: TextStyle(color: navBarsColor),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: navBarsColor)),
+                      labelText: "Email",
+                      border: OutlineInputBorder(),
+                      prefix: Icon(Icons.email),
                     ),
-                  ),
-                  validator: (value){
-                    if(value!.isEmpty){return "Enter password";}
-                    else if(passController.text.length < 6){return "Password length should not be less then 6 chars";}
-                  },
-                ),
-
-                //Кнопка
-                SizedBox(height: 60,),
-                InkWell(
-                    onTap: (){
-                      if (_formfield.currentState!.validate()){
-                        print("success");
-                        emailController.clear();
-                        passController.clear();
-                      }
+                    validator:  (value){
+                      if (value!.isEmpty){return "Enter email";}
+                      bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value);
+                      if (!emailValid){return "Enter valid email";}
                     },
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: navBarsColor,
-                        borderRadius: BorderRadius.circular(5),
+                  ),
+
+                  //Пароль
+                  SizedBox(height: 20),
+                  TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    controller: passController,
+                    obscureText: passToggle,
+                    decoration:  InputDecoration(
+                      labelStyle: TextStyle(color: navBarsColor),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: navBarsColor)),
+                      labelText: "Password",
+                      border: OutlineInputBorder(),
+                      prefix: Icon(Icons.lock),
+                      suffixIcon: InkWell(
+                        onTap: (){
+                          setState(() {
+                            passToggle = !passToggle;
+                          });
+                        },
+                        child: Icon(passToggle ? Icons.visibility : Icons.visibility_off),
                       ),
-                        child: Center(
-                          child: Text("Log in", style: TextStyle(
-                            color: boxesColor,
-                            fontSize: 20,
+                    ),
+                    validator: (value){
+                      if(value!.isEmpty){return "Enter password";}
+                      else if(passController.text.length < 6){return "Password length should not be less then 6 chars";}
+                    },
+                  ),
+
+                  //Кнопка
+                  SizedBox(height: 60,),
+                  InkWell(
+                      onTap: (){
+                        if (_formfield.currentState!.validate()){
+                          print("success");
+                          emailController.clear();
+                          passController.clear();
+                        }
+                      },
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: navBarsColor,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                          child: Center(
+                            child: Text("Log in", style: TextStyle(
+                              color: boxesColor,
+                              fontSize: 20,
+                              ),
                             ),
                           ),
-                        ),
+                      ),
                     ),
-                  ),
 
-                //Последняя строка
-                SizedBox(height: 20,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  //Последняя строка
+                  SizedBox(height: 20,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
 
-                    Text("Alredy have an accaunt?", style: TextStyle(fontSize: 16),),
+                      Text("Alredy have an accaunt?", style: TextStyle(fontSize: 16),),
 
-                    TextButton(
-                      onPressed: () {}, 
-                      child: Text(
-                        "Sing up",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold
-                        ),
-                      )
-                    ),
-                  ],
-                )
-              ],
+                      TextButton(
+                        onPressed: () {}, 
+                        child: Text(
+                          "Sing up",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold
+                          ),
+                        )
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
+          // Форма регистрации
+          
         ),
       ),
     );
