@@ -1,15 +1,17 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:gwork_flutter_application_1/util/profile_card.dart';
+import 'package:gwork_flutter_application_1/util/nav_bar.dart';
 
-class Auth extends StatefulWidget{
-  const Auth({super.key});
+class HomePage extends StatefulWidget{
+  const HomePage({super.key});
 
   @override
-  State<Auth> createState() => _AuthState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _AuthState extends State<Auth> {
+class _HomePageState extends State<HomePage> {
   static const Color constBackgroundColor = Color(0xffe2ecec);
   static const Color navBarsColor = Color(0xff089bab);
   static const Color boxesColor = Color(0xffffffff);
@@ -21,39 +23,27 @@ class _AuthState extends State<Auth> {
         
         appBar: AppBar(
           backgroundColor: navBarsColor,
-          title: Text('HealApp'),
-          elevation: 0,
-          leading: Icon(Icons.menu),
-          actions: [IconButton(onPressed: () {}, icon: Icon(Icons.person_2_outlined))],
+          title: Text('Injury_Insight'),
+          leading: Icon(Icons.menu, color: Colors.white,),
+          actions: [IconButton(onPressed: () {}, icon: Icon(Icons.person, color: Colors.white,))],
+          centerTitle: true,
+          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
         ),
         
-        // body: Center(
-        //   child: Container(
-        //     // child: ListView,
-        //     height: 300,
-        //     width: 300,
-        //     decoration: BoxDecoration(
-        //       color: boxesColor, // используйте color здесь
-        //       borderRadius: BorderRadius.all(Radius.circular(15.0)),
-        //     ),
-        //   ),
-        // ),
-        body: Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              constraints: BoxConstraints(
-                maxWidth: double.infinity, // максимальная ширина
-              ),
-              decoration: BoxDecoration(
-                color: boxesColor,
-                borderRadius: BorderRadius.all(Radius.circular(15.0)),
-              ),
-              // child: , // вставьте свой виджет содержимого сюда
+        
+        body: SingleChildScrollView(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: [
+                SizedBox(height: 10,),
+                ProfileCard(username: 'Alexsander', age: 19, status: 'Пациент', phone: '+7 988 000-57-86', email: 'ak.polyanskiy@gmail.com', selfInfo: 'Студент 4 курса',),
+                SizedBox(height: 10,),
+                ProfileCard(username: 'Alexsander', age: 19, status: 'Пациент', phone: '+7 988 000-57-86', email: 'ak.polyanskiy@gmail.com', selfInfo: 'Студент 4 курса',),
+              ],
             ),
           ),
-        ),
 
+        bottomNavigationBar: AppBottomNavigationBar(currentIndex: 0)
     );      
   }
 }

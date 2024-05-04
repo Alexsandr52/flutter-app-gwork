@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_const_constructors
-import 'dart:ffi';
+// import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -12,6 +12,7 @@ class _AuthFormState extends State<AuthForm> {
   final _formfield = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passController = TextEditingController();
+  final nameController = TextEditingController();
   
   bool passToggle = true;
 
@@ -26,21 +27,22 @@ class _AuthFormState extends State<AuthForm> {
       
       appBar: AppBar(
           backgroundColor: navBarsColor,
-          title: Text('InjuryInsight'),
-          leading: Icon(Icons.menu),
-          actions: [IconButton(onPressed: () {}, icon: Icon(Icons.person_2_outlined))],
+          title: Text('Injury_Insight'),
+          leading: Icon(Icons.menu, color: Colors.white,),
+          actions: [IconButton(onPressed: () {}, icon: Icon(Icons.person_off, color: Colors.white,))],
           centerTitle: true,
+          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
         ),
       
       body: SingleChildScrollView(
         child: Padding( 
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 80),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 70),
           child: Container(
             decoration: BoxDecoration(
               color: boxesColor,
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(30),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
 
             child: Form(
               key: _formfield,
@@ -50,22 +52,37 @@ class _AuthFormState extends State<AuthForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   
-                  //Email
+                  // Имя
                   SizedBox(height: 30),
+                  TextFormField(
+                    keyboardType: TextInputType.name,
+                    controller: nameController,
+                    decoration:  InputDecoration(
+                      labelStyle: TextStyle(color: navBarsColor),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: navBarsColor), borderRadius: BorderRadius.circular(10)),
+                      labelText: "Имя",
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      prefix: Icon(Icons.person),
+                    ),
+                    validator: (value){if (value!.isEmpty){return "Введите имя";}},
+                  ),
+
+                  //Email
+                  SizedBox(height: 20),
                   TextFormField(
                     keyboardType: TextInputType.emailAddress,
                     controller: emailController,
                     decoration:  InputDecoration(
                       labelStyle: TextStyle(color: navBarsColor),
-                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: navBarsColor)),
-                      labelText: "Email",
-                      border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: navBarsColor), borderRadius: BorderRadius.circular(10)),
+                      labelText: "Почта",
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                       prefix: Icon(Icons.email),
                     ),
                     validator:  (value){
-                      if (value!.isEmpty){return "Enter email";}
+                      if (value!.isEmpty){return "Введите почту";}
                       bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value);
-                      if (!emailValid){return "Enter valid email";}
+                      if (!emailValid){return "Неверный формат";}
                     },
                   ),
 
@@ -77,9 +94,9 @@ class _AuthFormState extends State<AuthForm> {
                     obscureText: passToggle,
                     decoration:  InputDecoration(
                       labelStyle: TextStyle(color: navBarsColor),
-                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: navBarsColor)),
-                      labelText: "Password",
-                      border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: navBarsColor), borderRadius: BorderRadius.circular(10)),
+                      labelText: "Пароль",
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                       prefix: Icon(Icons.lock),
                       suffixIcon: InkWell(
                         onTap: (){
@@ -91,8 +108,8 @@ class _AuthFormState extends State<AuthForm> {
                       ),
                     ),
                     validator: (value){
-                      if(value!.isEmpty){return "Enter password";}
-                      else if(passController.text.length < 6){return "Password length should not be less then 6 chars";}
+                      if(value!.isEmpty){return "Придумайте пароль";}
+                      else if(passController.text.length < 6){return "Длинна паролья меньше 6";}
                     },
                   ),
 
@@ -113,7 +130,7 @@ class _AuthFormState extends State<AuthForm> {
                           borderRadius: BorderRadius.circular(5),
                         ),
                           child: Center(
-                            child: Text("Log in", style: TextStyle(
+                            child: Text("Зарегистрироваться", style: TextStyle(
                               color: boxesColor,
                               fontSize: 20,
                               ),
@@ -128,12 +145,12 @@ class _AuthFormState extends State<AuthForm> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
 
-                      Text("Alredy have an accaunt?", style: TextStyle(fontSize: 16),),
+                      Text("Уже есть аккаунт?", style: TextStyle(fontSize: 16),),
 
                       TextButton(
                         onPressed: () {}, 
                         child: Text(
-                          "Sing up",
+                          "Войти",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold
@@ -147,7 +164,6 @@ class _AuthFormState extends State<AuthForm> {
             ),
           ),
           // Форма регистрации
-          
         ),
       ),
     );

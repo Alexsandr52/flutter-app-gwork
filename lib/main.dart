@@ -14,14 +14,12 @@ void main() {
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
-  static const Color constBackgroundColor = Color(0xffe2ecec);
-  static const Color elementsColor = Color(0xff089bab);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthForm(),
+      // home: AuthForm(),
+      home: HomePage(),
       // theme: ThemeData(primarySwatch: Colors.Color(0xff089bab)),
     );
   }
