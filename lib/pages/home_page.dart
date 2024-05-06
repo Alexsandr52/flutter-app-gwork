@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:gwork_flutter_application_1/util/profile_card.dart';
+import 'package:gwork_flutter_application_1/util/box.dart';
 import 'package:gwork_flutter_application_1/util/nav_bar.dart';
 
 class HomePage extends StatefulWidget{
@@ -38,7 +39,14 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(height: 10,),
                 ProfileCard(username: 'Alexsander', age: 19, status: 'Пациент', phone: '+7 988 000-57-86', email: 'ak.polyanskiy@gmail.com', selfInfo: 'Студент 4 курса',),
                 SizedBox(height: 10,),
-                ProfileCard(username: 'Alexsander', age: 19, status: 'Пациент', phone: '+7 988 000-57-86', email: 'ak.polyanskiy@gmail.com', selfInfo: 'Студент 4 курса',),
+                CastomBox(child: 
+                  Column(
+                    children: [
+                      Text('Информация')
+                    ],
+                  ), 
+                )
+
               ],
             ),
           ),

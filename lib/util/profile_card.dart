@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,9 +28,21 @@ class ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0),),
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: boxesColor,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            offset: Offset(0.0, 4.0),
+            blurRadius: 6.0,
+          ),
+        ]
+      ),
+      // elevation: 4,
+      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child:Column(
