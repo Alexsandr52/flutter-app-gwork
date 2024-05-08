@@ -1,17 +1,16 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:gwork_flutter_application_1/widgets/widgets.dart';
 
-class AuthForm extends StatefulWidget {
+class LoginForm extends StatefulWidget {
   @override
-  _AuthFormState createState() => _AuthFormState();
+  _LoginFormState createState() => _LoginFormState();
 }
 
-class _AuthFormState extends State<AuthForm> {
+class _LoginFormState extends State<LoginForm> {
   final _formfield = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passController = TextEditingController();
-  final nameController = TextEditingController();
   
   bool passToggle = true;
 
@@ -24,49 +23,18 @@ class _AuthFormState extends State<AuthForm> {
     return Scaffold(
       backgroundColor: constBackgroundColor,
       
-      appBar: AppBar(
-          backgroundColor: navBarsColor,
-          title: Text('Injury_Insight'),
-          leading: Icon(Icons.menu, color: Colors.white,),
-          actions: [IconButton(onPressed: () {}, icon: Icon(Icons.person_off, color: Colors.white,))],
-          centerTitle: true,
-          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
-        ),
+      appBar: CustomAppBar(),
       
       body: SingleChildScrollView(
-        child: Padding( 
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 70),
-          child: Container(
-            decoration: BoxDecoration(
-              color: boxesColor,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-
-            child: Form(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 70),
+        child: CustomBox(
+          child: Form(
               key: _formfield,
               
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   
-                  // Имя
-                  SizedBox(height: 30),
-                  TextFormField(
-                    keyboardType: TextInputType.name,
-                    controller: nameController,
-                    decoration:  InputDecoration(
-                      labelStyle: TextStyle(color: navBarsColor),
-                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: navBarsColor), borderRadius: BorderRadius.circular(10)),
-                      labelText: "Имя",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                      prefix: Icon(Icons.person),
-                    ),
-                    validator: (value){if (value!.isEmpty){return "Введите имя";}},
-                  ),
-
-                  //Email
+                  //login
                   SizedBox(height: 20),
                   TextFormField(
                     keyboardType: TextInputType.emailAddress,
@@ -129,7 +97,7 @@ class _AuthFormState extends State<AuthForm> {
                           borderRadius: BorderRadius.circular(5),
                         ),
                           child: Center(
-                            child: Text("Зарегистрироваться", style: TextStyle(
+                            child: Text("Войти", style: TextStyle(
                               color: boxesColor,
                               fontSize: 20,
                               ),
@@ -143,28 +111,27 @@ class _AuthFormState extends State<AuthForm> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-
-                      Text("Уже есть аккаунт?", style: TextStyle(fontSize: 16),),
-
                       TextButton(
-                        onPressed: () {}, 
+                        onPressed: () {Navigator.of(context).pushNamed('/auth');}, 
                         child: Text(
-                          "Войти",
+                          "Регистрация",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold
                           ),
-                        )
+                        ),
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all<Color>(navBarsColor), // Цвет текста кнопки
+                        ),
                       ),
                     ],
                   )
                 ],
               ),
-            ),
+            ),  
           ),
-          // Форма регистрации
-        ),
-      ),
+      )
+ 
     );
   }
 }
