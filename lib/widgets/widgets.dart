@@ -5,42 +5,6 @@ import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:gwork_flutter_application_1/models/notif.dart';
 import 'package:gwork_flutter_application_1/screens/notification_page.dart';
 
-// footer
-class AppBottomNavigationBar extends StatelessWidget {
-  final int currentIndex;
-
-  static const Color constBackgroundColor = Color(0xffe2ecec);
-  static const Color navBarsColor = Color(0xff089bab);
-  static const Color boxesColor = Color(0xffffffff);
-
-  AppBottomNavigationBar({required this.currentIndex});
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Главная',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.insert_chart_outlined_rounded),
-          label: 'Анализы',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.chat_bubble_outline_rounded),
-          label: 'Чат',
-        ),
-      ],
-      currentIndex: currentIndex,
-      selectedItemColor: navBarsColor,
-      onTap: (value) {
-        print(value);
-      },
-    );
-  }
-}
-
 // header
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;

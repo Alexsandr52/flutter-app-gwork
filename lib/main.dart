@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:gwork_flutter_application_1/screens/auth/auth_form.dart';
 import 'package:gwork_flutter_application_1/screens/auth/login_form.dart';
 import 'package:gwork_flutter_application_1/screens/doctor/doctor_dashboard.dart';
@@ -15,16 +16,55 @@ void main() {
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
-  final String title = 'Новость';
-  final String text =
-      'Ошибка "The instance member \'user\' can\'t be accessed in an initializer" возникает потому, что переменная user инициализируется в то же самое время, когда она используется в инициализаторе news.';
-
   static const Color constBackgroundColor = Color(0xffe2ecec);
   static const Color navBarsColor = Color(0xff089bab);
   static const Color boxesColor = Color(0xffffffff);
 
   @override
   Widget build(BuildContext context) {
+    String title = 'Новость';
+    String text =
+        'Ошибка "The instance member \'user\' can\'t be accessed in an initializer" возникает потому, что переменная user инициализируется в то же самое время, когда она используется в инициализаторе news.';
+    List news = [
+      NewsBox(
+        imageUrl:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvSx0FbtCgMryLllm4D5vT1T0GGzJK1qQdzXuJfYI_oA&s',
+        title: title,
+        text: text,
+      ),
+      NewsBox(
+        imageUrl:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRguHCFY2jxLVPhf_-7EFFXZ65w9LIMmpVsMcrI5lWMVw&s',
+        title: title,
+        text: text,
+      ),
+      NewsBox(
+        imageUrl:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvSx0FbtCgMryLllm4D5vT1T0GGzJK1qQdzXuJfYI_oA&s',
+        title: title,
+        text: text,
+      ),
+      NewsBox(
+        title: title,
+        text: text,
+      )
+    ];
+    User patient = User(
+      name: 'Олег',
+      surname: 'Приветов',
+      birthdate: '10/09/2003',
+      email: 'example@gmail.com',
+      role: Roles.patient,
+      phone: '+79888885674',
+      selfInfo:
+          'В основной части кода вызывается функция find_min_four_digit_number(), чтобы найти наименьшее четырехзначное число, которое может появиться на экране в результате работы автомата, и результат выводится на экран.',
+    );
+    User doctor = User(
+        name: 'Александр',
+        surname: 'Полянский',
+        email: 'gek@gmail.com',
+        role: Roles.doctor);
+
     return MaterialApp(
       theme: ThemeData(
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -46,35 +86,20 @@ class MainApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: DoctorDashboard(news: [
-        NewsBox(
-          imageUrl:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvSx0FbtCgMryLllm4D5vT1T0GGzJK1qQdzXuJfYI_oA&s',
-          title: title,
-          text: text,
-        ),
-        NewsBox(
-          imageUrl:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRguHCFY2jxLVPhf_-7EFFXZ65w9LIMmpVsMcrI5lWMVw&s',
-          title: title,
-          text: text,
-        ),
-        NewsBox(
-          imageUrl:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvSx0FbtCgMryLllm4D5vT1T0GGzJK1qQdzXuJfYI_oA&s',
-          title: title,
-          text: text,
-        ),
-        NewsBox(
-          title: title,
-          text: text,
-        )
-      ]),
+      home: DoctorDashboard(
+        news: news,
+        user: doctor,
+      ),
       routes: {
         '/login': (context) => LoginForm(),
         '/auth': (context) => AuthForm(),
-        '/docHome': (context) => DoctorDashboard(),
-        '/docPatientList': (context) => DoctorPatientList(),
+        '/docHome': (context) => DoctorDashboard(
+              user: doctor,
+              news: news,
+            ),
+        '/docPatientList': (context) => DoctorPatientList(
+              patients: [patient, patient, patient, patient, patient, patient],
+            ),
       },
     );
   }

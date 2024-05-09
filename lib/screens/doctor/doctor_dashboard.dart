@@ -8,7 +8,7 @@ class DoctorDashboard extends StatefulWidget {
   final List? news;
   final User? user;
 
-  DoctorDashboard({this.news, this.user});
+  const DoctorDashboard({this.news, this.user});
 
   @override
   State<DoctorDashboard> createState() => DdoctorDashboardState();

@@ -5,7 +5,9 @@ import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:gwork_flutter_application_1/widgets/widgets.dart';
 
 class DoctorPatientList extends StatefulWidget {
-  const DoctorPatientList({super.key});
+  final List? patients;
+
+  const DoctorPatientList({super.key, this.patients});
 
   @override
   State<DoctorPatientList> createState() => DdoctorPatientListState();
@@ -14,24 +16,31 @@ class DoctorPatientList extends StatefulWidget {
 class DdoctorPatientListState extends State<DoctorPatientList> {
   static const Color constBackgroundColor = Color(0xffe2ecec);
 
-  User alex = User(
-      birthdate: '18.06.2004',
-      name: 'Alexsander',
-      surname: 'Polyanskiy',
-      email: 'ak.gek@gmail.com',
-      role: Roles.patient);
+  List patients = [];
+
+  @override
+  void initState() {
+    if (widget.patients != null) {
+      patients = widget.patients!;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: constBackgroundColor,
         appBar: CustomAppBar(title: 'Пациенты'),
-        body: ListView(
-          padding: EdgeInsets.all(10),
-          children: [
-            SizedBox(height: 20),
-            PatientCard(patient: alex),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.all(10),
+          child: ListView.separated(
+              itemBuilder: (context, index) {
+                return PatientCard(patient: patients[index]);
+              },
+              separatorBuilder: (context, index) {
+                return SizedBox(height: 10);
+              },
+              itemCount: patients.length),
         ),
         bottomNavigationBar: CustomBottomNavigationBar(pageIndex: 1));
   }
