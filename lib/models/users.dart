@@ -18,4 +18,6 @@ class User {
     this.phone,
     this.selfInfo,
   });
+
+  // сетеры для бд
 }

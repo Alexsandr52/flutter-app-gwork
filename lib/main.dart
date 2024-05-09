@@ -1,9 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gwork_flutter_application_1/screens/auth/auth_form.dart';
 import 'package:gwork_flutter_application_1/screens/auth/login_form.dart';
 import 'package:gwork_flutter_application_1/screens/doctor/doctor_dashboard.dart';
+import 'package:gwork_flutter_application_1/screens/doctor/doctor_patient_list.dart';
 import 'package:gwork_flutter_application_1/screens/notification_page.dart';
+import 'package:gwork_flutter_application_1/widgets/widgets.dart';
 
 void main() {
   runApp(const MainApp());
@@ -11,6 +14,10 @@ void main() {
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
+
+  final String title = 'Новость';
+  final String text =
+      'Ошибка "The instance member \'user\' can\'t be accessed in an initializer" возникает потому, что переменная user инициализируется в то же самое время, когда она используется в инициализаторе news.';
 
   static const Color constBackgroundColor = Color(0xffe2ecec);
   static const Color navBarsColor = Color(0xff089bab);
@@ -39,12 +46,35 @@ class MainApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: DoctorDashboard(),
+      home: DoctorDashboard(news: [
+        NewsBox(
+          imageUrl:
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvSx0FbtCgMryLllm4D5vT1T0GGzJK1qQdzXuJfYI_oA&s',
+          title: title,
+          text: text,
+        ),
+        NewsBox(
+          imageUrl:
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRguHCFY2jxLVPhf_-7EFFXZ65w9LIMmpVsMcrI5lWMVw&s',
+          title: title,
+          text: text,
+        ),
+        NewsBox(
+          imageUrl:
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvSx0FbtCgMryLllm4D5vT1T0GGzJK1qQdzXuJfYI_oA&s',
+          title: title,
+          text: text,
+        ),
+        NewsBox(
+          title: title,
+          text: text,
+        )
+      ]),
       routes: {
         '/login': (context) => LoginForm(),
         '/auth': (context) => AuthForm(),
-        '/home': (context) => DoctorDashboard(),
-        '/notification': (context) => NotificationPage(),
+        '/docHome': (context) => DoctorDashboard(),
+        '/docPatientList': (context) => DoctorPatientList(),
       },
     );
   }

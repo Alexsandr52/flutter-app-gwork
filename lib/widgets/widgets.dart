@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gwork_flutter_application_1/models/users.dart';
+import 'package:gwork_flutter_application_1/models/notif.dart';
+import 'package:gwork_flutter_application_1/screens/notification_page.dart';
 
 // footer
 class AppBottomNavigationBar extends StatelessWidget {
@@ -43,6 +43,11 @@ class AppBottomNavigationBar extends StatelessWidget {
 
 // header
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final String? title;
+  final bool notificationIcon;
+
+  CustomAppBar({this.title, this.notificationIcon = true});
+
   static const Color constBackgroundColor = Color(0xffe2ecec);
   static const Color navBarsColor = Color(0xff089bab);
   static const Color boxesColor = Color(0xffffffff);
@@ -51,17 +56,30 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: navBarsColor,
-      title: Text('Injury_Insight'),
-      actions: [
-        IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/notification');
-            },
-            icon: Icon(
-              Icons.notifications_on_outlined,
-              color: Colors.white,
-            ))
-      ],
+      title: title == null ? null : Text(title!),
+      actions: notificationIcon
+          ? [
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationPage(
+                          notifArr: [
+                            NotificationObj(title: 'hello'),
+                            NotificationObj(title: 'hello'),
+                            NotificationObj(title: 'hello')
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.notifications_on_outlined,
+                    color: Colors.white,
+                  ))
+            ]
+          : null,
       centerTitle: true,
       titleTextStyle: TextStyle(color: boxesColor, fontSize: 20),
       iconTheme: IconThemeData(color: Colors.white),
@@ -298,23 +316,22 @@ class ReportCard extends StatelessWidget {
   }
 }
 
-class CastomNotification extends StatelessWidget {
-  final String title;
-  final Function onTapFunction;
+class CustomNotification extends StatelessWidget {
+  final NotificationObj notif;
 
   static const Color constBackgroundColor = Color(0xffe2ecec);
   static const Color navBarsColor = Color(0xff089bab);
   static const Color boxesColor = Color(0xffffffff);
 
   // Конструктор с аргументом username и значением по умолчанию "Имя пользователя"
-  CastomNotification({required this.onTapFunction, this.title = ''});
+  CustomNotification({required this.notif});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return CustomBox(
       child: Row(
         children: [
-          Text(title),
+          Text('${notif.title}'),
           Spacer(),
           TextButton(
             onPressed: () {},
@@ -366,7 +383,7 @@ class PatientDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(title: ''),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -386,6 +403,115 @@ class PatientDetailsScreen extends StatelessWidget {
             // Добавьте здесь другие поля, которые хотите отобразить
           ],
         ),
+      ),
+    );
+  }
+}
+
+class CustomBottomNavigationBar extends StatefulWidget {
+  final int pageIndex;
+  CustomBottomNavigationBar({required this.pageIndex});
+
+  @override
+  _CustomBottomNavigationBarState createState() =>
+      _CustomBottomNavigationBarState();
+}
+
+class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
+  static const Color navBarsColor = Color(0xff089bab);
+  int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    _selectedIndex = widget.pageIndex;
+    super.initState();
+  }
+
+  void _onItemTapped(int index) {
+    if (_selectedIndex != index) {
+      _selectedIndex = index;
+      switch (_selectedIndex) {
+        case 0:
+          Navigator.pushReplacementNamed(context, '/docHome');
+        case 1:
+          Navigator.pushReplacementNamed(context, '/docPatientList');
+        default:
+          print(index);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Главная',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.people_alt),
+          label: 'Пациенты',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings),
+          label: 'Настройки',
+        ),
+      ],
+      currentIndex: _selectedIndex,
+      selectedItemColor: navBarsColor,
+      onTap: _onItemTapped,
+    );
+  }
+}
+
+class NewsBox extends StatelessWidget {
+  final String title;
+  final String text;
+  final bool? important;
+  final String? imageUrl;
+
+  NewsBox(
+      {required this.title,
+      required this.text,
+      this.important = true,
+      this.imageUrl});
+
+  static const Color boxesColor = Color(0xffffffff);
+  static const Color constBackgroundColor = Color(0xffe2ecec);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomBox(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              if (important!) Icon(Icons.label_important),
+              Text(
+                title,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          SizedBox(height: 5),
+          if (imageUrl != null)
+            SizedBox(
+              width:
+                  double.infinity, // Ширина равна ширине родительского элемента
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20), // Скругленные углы
+                child: Image.network(
+                  imageUrl!,
+                  fit: BoxFit.cover, // Заполнение контейнера
+                  height: 150, // Высота изображения
+                ),
+              ),
+            ),
+          SizedBox(height: 10),
+          Text(text),
+        ],
       ),
     );
   }
