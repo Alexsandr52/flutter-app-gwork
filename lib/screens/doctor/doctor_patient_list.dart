@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:gwork_flutter_application_1/const_themedata.dart';
 import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:gwork_flutter_application_1/widgets/widgets.dart';
 
@@ -14,8 +15,6 @@ class DoctorPatientList extends StatefulWidget {
 }
 
 class DdoctorPatientListState extends State<DoctorPatientList> {
-  static const Color constBackgroundColor = Color(0xffe2ecec);
-
   List patients = [];
 
   @override
@@ -29,10 +28,10 @@ class DdoctorPatientListState extends State<DoctorPatientList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: constBackgroundColor,
+        backgroundColor: Themedata.constBackgroundColor,
         appBar: CustomAppBar(title: 'Пациенты'),
         body: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: ListView.separated(
               itemBuilder: (context, index) {
                 return PatientCard(patient: patients[index]);

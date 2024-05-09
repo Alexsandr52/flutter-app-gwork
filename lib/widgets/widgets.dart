@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:gwork_flutter_application_1/const_themedata.dart';
 import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:gwork_flutter_application_1/models/notif.dart';
 import 'package:gwork_flutter_application_1/screens/notification_page.dart';
@@ -12,31 +14,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   CustomAppBar({this.title, this.notificationIcon = true});
 
-  static const Color constBackgroundColor = Color(0xffe2ecec);
-  static const Color navBarsColor = Color(0xff089bab);
-  static const Color boxesColor = Color(0xffffffff);
-
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: navBarsColor,
+      backgroundColor: Themedata.navBarsColor,
       title: title == null ? null : Text(title!),
       actions: notificationIcon
           ? [
               IconButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NotificationPage(
-                          notifArr: [
-                            NotificationObj(title: 'hello'),
-                            NotificationObj(title: 'hello'),
-                            NotificationObj(title: 'hello')
-                          ],
-                        ),
-                      ),
-                    );
+                    Navigator.of(context).pushNamed('/notification');
+                    // Navigator.pushNamed(context, routeName)
+                    // builder: (context) => NotificationPage(),
                   },
                   icon: Icon(
                     Icons.notifications_on_outlined,
@@ -45,7 +34,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ]
           : null,
       centerTitle: true,
-      titleTextStyle: TextStyle(color: boxesColor, fontSize: 20),
+      titleTextStyle: TextStyle(color: Themedata.boxesColor, fontSize: 20),
       iconTheme: IconThemeData(color: Colors.white),
     );
   }
@@ -70,15 +59,16 @@ class ProfileCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-          color: boxesColor,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              offset: Offset(0.0, 4.0),
-              blurRadius: 6.0,
-            ),
-          ]),
+        color: boxesColor,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            offset: Offset(0.0, 4.0),
+            blurRadius: 6.0,
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(children: [
@@ -173,9 +163,6 @@ class CustomBox extends StatelessWidget {
 
   CustomBox({required this.child, this.onTap});
 
-  static const Color boxesColor = Color(0xffffffff);
-  static const Color constBackgroundColor = Color(0xffe2ecec);
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -183,15 +170,16 @@ class CustomBox extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-            color: boxesColor,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey,
-                offset: Offset(0.0, 4.0),
-                blurRadius: 6.0,
-              ),
-            ]),
+          color: Themedata.boxesColor,
+          borderRadius: BorderRadius.circular(30),
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.grey,
+          //     offset: Offset(0.0, 4.0),
+          //     blurRadius: 6.0,
+          //   ),
+          // ],
+        ),
         child: Padding(
           padding: EdgeInsets.all(20),
           child: child,
@@ -208,10 +196,6 @@ class ReportCard extends StatelessWidget {
   final String doctor;
   final ImageProvider? image;
   final String imageUrl;
-
-  static const Color constBackgroundColor = Color(0xffe2ecec);
-  static const Color navBarsColor = Color(0xff089bab);
-  static const Color boxesColor = Color(0xffffffff);
 
   ReportCard({
     required this.title,
@@ -269,7 +253,7 @@ class ReportCard extends StatelessWidget {
                 ]),
                 style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.all<Color>(
-                      navBarsColor), // Цвет текста кнопки
+                      Themedata.navBarsColor), // Цвет текста кнопки
                 ),
               )
             ],
@@ -283,10 +267,6 @@ class ReportCard extends StatelessWidget {
 class CustomNotification extends StatelessWidget {
   final NotificationObj notif;
 
-  static const Color constBackgroundColor = Color(0xffe2ecec);
-  static const Color navBarsColor = Color(0xff089bab);
-  static const Color boxesColor = Color(0xffffffff);
-
   // Конструктор с аргументом username и значением по умолчанию "Имя пользователя"
   CustomNotification({required this.notif});
 
@@ -295,15 +275,87 @@ class CustomNotification extends StatelessWidget {
     return CustomBox(
       child: Row(
         children: [
-          Text('${notif.title}'),
-          Spacer(),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${notif.title}',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                if (notif.text != null)
+                  Text(
+                    notif.text!,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                SizedBox(
+                  height: 5,
+                ),
+                if (notif.author != null)
+                  Text(notif.author!,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          // Spacer(),
           TextButton(
+            // TODO
             onPressed: () {},
             child: Text('Удалить'),
             style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(navBarsColor),
+              foregroundColor:
+                  MaterialStateProperty.all<Color>(Themedata.navBarsColor),
             ),
           )
+        ],
+      ),
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    NotificationDetailsScreen(notificationObj: notif)));
+      },
+    );
+  }
+}
+
+class NotificationDetailsScreen extends StatelessWidget {
+  final NotificationObj notificationObj;
+
+  const NotificationDetailsScreen({required this.notificationObj});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomAppBar(
+        notificationIcon: false,
+      ),
+      body: ListView(
+        padding: EdgeInsets.all(16),
+        children: [
+          Text(
+            '${notificationObj.title}',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          if (notificationObj.text != null)
+            Text(
+              notificationObj.text!,
+            ),
+          SizedBox(
+            height: 5,
+          ),
+          if (notificationObj.author != null)
+            Text(notificationObj.author!,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -312,11 +364,7 @@ class CustomNotification extends StatelessWidget {
 
 class PatientCard extends StatelessWidget {
   final User patient;
-
   const PatientCard({required this.patient});
-
-  static const Color boxesColor = Color(0xffffffff);
-  static const Color constBackgroundColor = Color(0xffe2ecec);
 
   @override
   Widget build(BuildContext context) {
@@ -331,7 +379,10 @@ class PatientCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${patient.name} ${patient.surname}'),
+            Text(
+              '${patient.name} ${patient.surname}',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             Text('${patient.birthdate}'),
             // Text(),
           ],
@@ -347,6 +398,7 @@ class PatientDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Themedata.constBackgroundColor,
       appBar: CustomAppBar(title: ''),
       body: Padding(
         padding: EdgeInsets.all(16),
@@ -357,14 +409,18 @@ class PatientDetailsScreen extends StatelessWidget {
               '${patient.name} ${patient.surname}',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
+            SizedBox(height: 10),
             Text('Почта: ${patient.email}'),
+            SizedBox(height: 10),
             if (patient.birthdate != null)
               Text('Дата рождения: ${patient.birthdate}'),
+            SizedBox(height: 10),
             if (patient.phone != null) Text('Тел: ${patient.phone}'),
-            if (patient.selfInfo != null)
-              Text('Дата рождения: ${patient.selfInfo}'),
-
+            SizedBox(height: 10),
+            if (patient.selfInfo != null) Text('О себе: ${patient.selfInfo}'),
+            SizedBox(height: 20),
             // Добавьте здесь другие поля, которые хотите отобразить
+            // ListView.separated(itemBuilder: itemBuilder, separatorBuilder: separatorBuilder, itemCount: itemCount)
           ],
         ),
       ),
@@ -382,7 +438,6 @@ class CustomBottomNavigationBar extends StatefulWidget {
 }
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  static const Color navBarsColor = Color(0xff089bab);
   int _selectedIndex = 0;
 
   @override
@@ -423,12 +478,13 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         ),
       ],
       currentIndex: _selectedIndex,
-      selectedItemColor: navBarsColor,
+      selectedItemColor: Themedata.navBarsColor,
       onTap: _onItemTapped,
     );
   }
 }
 
+// Переписать давлаждыадывоадыпдлавпд
 class NewsBox extends StatelessWidget {
   final String title;
   final String text;
@@ -440,9 +496,6 @@ class NewsBox extends StatelessWidget {
       required this.text,
       this.important = true,
       this.imageUrl});
-
-  static const Color boxesColor = Color(0xffffffff);
-  static const Color constBackgroundColor = Color(0xffe2ecec);
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:gwork_flutter_application_1/const_themedata.dart';
 import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:gwork_flutter_application_1/widgets/widgets.dart';
 
@@ -15,8 +16,6 @@ class DoctorDashboard extends StatefulWidget {
 }
 
 class DdoctorDashboardState extends State<DoctorDashboard> {
-  static const Color constBackgroundColor = Color(0xffe2ecec);
-
   User user = User(
       birthdate: 'Ошибка',
       name: 'Ошибка',
@@ -31,7 +30,6 @@ class DdoctorDashboardState extends State<DoctorDashboard> {
     if (widget.user != null) {
       user = widget.user!;
     }
-    pageObj.add(ProfileCard(user: user));
     if (widget.news != null) {
       pageObj.addAll(widget.news!);
     }
@@ -41,29 +39,37 @@ class DdoctorDashboardState extends State<DoctorDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: constBackgroundColor,
+      backgroundColor: Themedata.constBackgroundColor,
       appBar: CustomAppBar(),
       body: Padding(
-        padding: EdgeInsets.all(10),
-        child: ListView.separated(
-            itemBuilder: (context, index) {
-              return pageObj[index];
-            },
-            separatorBuilder: (context, index) {
-              return SizedBox(height: 10);
-            },
-            itemCount: pageObj.length),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: CustomScrollView(
+          slivers: [
+            // SliverList(delegate: Sliver)
+            SliverToBoxAdapter(
+                child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: ProfileCard(user: user),
+            )),
+            SliverList.separated(
+              itemBuilder: (context, index) {
+                return NewsBox(
+                  title: pageObj[index].title,
+                  text: pageObj[index].text,
+                  imageUrl: pageObj[index].imgUrl,
+                );
+              },
+              separatorBuilder: (context, index) {
+                return SizedBox(height: 10);
+              },
+              itemCount: pageObj.length,
+            )
+          ],
+          // child: Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+          // ProfileCard(user: user)
+        ),
       ),
-
-      // body: ListView(
-      //   padding: EdgeInsets.all(10),
-      //   children: [
-      //     SizedBox(height: 10),
-      //     ProfileCard(user: alex),
-      //     SizedBox(height: 20),
-      //     PatientCard(patient: alex),
-      //   ],
-      // ),
       bottomNavigationBar: CustomBottomNavigationBar(pageIndex: 0),
     );
   }
