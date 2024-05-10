@@ -23,7 +23,6 @@ class NnotificationPageState extends State<NotificationPage> {
       notifArr = widget.notifArr!;
     }
     super.initState();
-    print(widget.notifArr);
   }
 
   @override
@@ -34,7 +33,6 @@ class NnotificationPageState extends State<NotificationPage> {
         notificationIcon: false,
       ),
       backgroundColor: constBackgroundColor,
-      // body: CustomNotification(notif: NotificationObj(title: 'hello'))
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: ListView.separated(

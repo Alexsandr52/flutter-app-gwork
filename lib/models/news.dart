@@ -1,13 +1,13 @@
 class News {
   final String title;
   final String text;
-  final String? img_url;
-  final bool is_important;
+  final String? imgUrl;
+  final bool isImportant;
 
   const News({
     required this.title,
     required this.text,
-    this.img_url,
-    this.is_important = false,
+    this.imgUrl,
+    this.isImportant = false,
   });
 }

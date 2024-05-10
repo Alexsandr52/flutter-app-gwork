@@ -27,29 +27,28 @@ class MainApp extends StatelessWidget {
         'Ошибка "The instance member \'user\' can\'t be accessed in an initializer" возникает потому, что переменная user инициализируется в то же самое время, когда она используется в инициализаторе news.';
     List news = [
       News(
+        title: title,
+        text: text,
+      ),
+      News(
           title: title,
           text: text,
-          img_url:
+          imgUrl:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3UHJsjR5JKiuYmu8oki6BkzbQGnzzQ2FdWZQH38s-hg&s'),
       News(
           title: title,
           text: text,
-          img_url:
+          imgUrl:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3UHJsjR5JKiuYmu8oki6BkzbQGnzzQ2FdWZQH38s-hg&s'),
       News(
           title: title,
           text: text,
-          img_url:
+          imgUrl:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3UHJsjR5JKiuYmu8oki6BkzbQGnzzQ2FdWZQH38s-hg&s'),
       News(
           title: title,
           text: text,
-          img_url:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3UHJsjR5JKiuYmu8oki6BkzbQGnzzQ2FdWZQH38s-hg&s'),
-      News(
-          title: title,
-          text: text,
-          img_url:
+          imgUrl:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3UHJsjR5JKiuYmu8oki6BkzbQGnzzQ2FdWZQH38s-hg&s'),
     ];
     User patient = User(

@@ -53,11 +53,7 @@ class DdoctorDashboardState extends State<DoctorDashboard> {
             )),
             SliverList.separated(
               itemBuilder: (context, index) {
-                return NewsBox(
-                  title: pageObj[index].title,
-                  text: pageObj[index].text,
-                  imageUrl: pageObj[index].imgUrl,
-                );
+                return NewsBox(news: pageObj[index]);
               },
               separatorBuilder: (context, index) {
                 return SizedBox(height: 10);

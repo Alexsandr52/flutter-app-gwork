@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gwork_flutter_application_1/const_themedata.dart';
+import 'package:gwork_flutter_application_1/models/news.dart';
 import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:gwork_flutter_application_1/models/notif.dart';
-import 'package:gwork_flutter_application_1/screens/notification_page.dart';
 
-// header
+// Верхний бар
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final bool notificationIcon;
@@ -43,7 +43,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
-// profile card
+// Карта профиля
 class ProfileCard extends StatelessWidget {
   final User user;
 
@@ -156,7 +156,7 @@ class ProfileCard extends StatelessWidget {
   }
 }
 
-// default box for build
+// Кастомная карточка для любых виджетов
 class CustomBox extends StatelessWidget {
   final Widget child;
   final VoidCallback? onTap;
@@ -189,7 +189,7 @@ class CustomBox extends StatelessWidget {
   }
 }
 
-// report card for analyses
+// Карты для анализов
 class ReportCard extends StatelessWidget {
   final String text;
   final String title;
@@ -264,6 +264,7 @@ class ReportCard extends StatelessWidget {
   }
 }
 
+// Уведомление
 class CustomNotification extends StatelessWidget {
   final NotificationObj notif;
 
@@ -325,6 +326,7 @@ class CustomNotification extends StatelessWidget {
   }
 }
 
+// Страница для уведомления
 class NotificationDetailsScreen extends StatelessWidget {
   final NotificationObj notificationObj;
 
@@ -362,6 +364,7 @@ class NotificationDetailsScreen extends StatelessWidget {
   }
 }
 
+// Карточка пациента
 class PatientCard extends StatelessWidget {
   final User patient;
   const PatientCard({required this.patient});
@@ -390,6 +393,7 @@ class PatientCard extends StatelessWidget {
   }
 }
 
+// Страница с деталями для пациента
 class PatientDetailsScreen extends StatelessWidget {
   final User patient;
 
@@ -428,6 +432,7 @@ class PatientDetailsScreen extends StatelessWidget {
   }
 }
 
+// Нижняя навигация
 class CustomBottomNavigationBar extends StatefulWidget {
   final int pageIndex;
   CustomBottomNavigationBar({required this.pageIndex});
@@ -484,18 +489,15 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   }
 }
 
-// Переписать давлаждыадывоадыпдлавпд
+// Карточка для новостей и рекламы
 class NewsBox extends StatelessWidget {
-  final String title;
-  final String text;
-  final bool? important;
-  final String? imageUrl;
+  // final String title;
+  // final String text;
+  // final bool? important;
+  // final String? imageUrl;
+  final News news;
 
-  NewsBox(
-      {required this.title,
-      required this.text,
-      this.important = true,
-      this.imageUrl});
+  NewsBox({required this.news});
 
   @override
   Widget build(BuildContext context) {
@@ -505,29 +507,29 @@ class NewsBox extends StatelessWidget {
         children: [
           Row(
             children: [
-              if (important!) Icon(Icons.label_important),
+              if (news.isImportant) Icon(Icons.label_important),
               Text(
-                title,
+                news.title,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ],
           ),
           SizedBox(height: 5),
-          if (imageUrl != null)
+          if (news.imgUrl != null)
             SizedBox(
               width:
                   double.infinity, // Ширина равна ширине родительского элемента
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20), // Скругленные углы
                 child: Image.network(
-                  imageUrl!,
+                  news.imgUrl!,
                   fit: BoxFit.cover, // Заполнение контейнера
                   height: 150, // Высота изображения
                 ),
               ),
             ),
           SizedBox(height: 10),
-          Text(text),
+          Text(news.text),
         ],
       ),
     );
