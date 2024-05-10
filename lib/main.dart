@@ -10,6 +10,8 @@ import 'package:gwork_flutter_application_1/screens/auth/login_form.dart';
 import 'package:gwork_flutter_application_1/screens/doctor/doctor_dashboard.dart';
 import 'package:gwork_flutter_application_1/screens/doctor/doctor_patient_list.dart';
 import 'package:gwork_flutter_application_1/screens/notification_page.dart';
+import 'package:gwork_flutter_application_1/screens/patient/patient_analysis.dart';
+import 'package:gwork_flutter_application_1/screens/patient/patient_dashboard.dart';
 import 'package:gwork_flutter_application_1/screens/settings.dart';
 import 'package:gwork_flutter_application_1/widgets/widgets.dart';
 
@@ -58,10 +60,12 @@ class MainApp extends StatelessWidget {
       email: 'example@gmail.com',
       role: Roles.patient,
       phone: '+79888885674',
+      id: 10,
       selfInfo:
           'В основной части кода вызывается функция find_min_four_digit_number(), чтобы найти наименьшее четырехзначное число, которое может появиться на экране в результате работы автомата, и результат выводится на экран.',
     );
     User doctor = User(
+        id: 23,
         name: 'Александр',
         surname: 'Полянский',
         email: 'gek@gmail.com',
@@ -88,11 +92,12 @@ class MainApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: DoctorDashboard(
-        news: news,
-        user: doctor,
-      ),
+      // home: DoctorDashboard(
+      //   news: news,
+      //   user: doctor,
+      // ),
       // home: SettingsPage(),
+      home: PatientDashbord(user: doctor, news: news),
       routes: {
         '/login': (context) => LoginForm(),
         '/auth': (context) => AuthForm(),
@@ -108,6 +113,11 @@ class MainApp extends StatelessWidget {
         '/docPatientList': (context) => DoctorPatientList(
               patients: [patient, patient, patient, patient, patient, patient],
             ),
+        '/patientHome': (context) => PatientDashbord(
+              user: doctor,
+              news: news,
+            ),
+        '/patientAnalisis': (context) => AnalisisPage(user: doctor),
       },
     );
   }

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gwork_flutter_application_1/const_themedata.dart';
+import 'package:gwork_flutter_application_1/models/analysis.dart';
 import 'package:gwork_flutter_application_1/models/news.dart';
 import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:gwork_flutter_application_1/models/notif.dart';
@@ -61,13 +62,13 @@ class ProfileCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: boxesColor,
         borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            offset: Offset(0.0, 4.0),
-            blurRadius: 6.0,
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.grey,
+        //     offset: Offset(0.0, 4.0),
+        //     blurRadius: 6.0,
+        //   ),
+        // ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -160,8 +161,10 @@ class ProfileCard extends StatelessWidget {
 class CustomBox extends StatelessWidget {
   final Widget child;
   final VoidCallback? onTap;
+  final Color color;
 
-  CustomBox({required this.child, this.onTap});
+  CustomBox(
+      {required this.child, this.onTap, this.color = Themedata.boxesColor});
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +173,7 @@ class CustomBox extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Themedata.boxesColor,
+          color: color,
           borderRadius: BorderRadius.circular(30),
           // boxShadow: [
           //   BoxShadow(
@@ -191,35 +194,28 @@ class CustomBox extends StatelessWidget {
 
 // Карты для анализов
 class ReportCard extends StatelessWidget {
-  final String text;
-  final String title;
-  final String doctor;
-  final ImageProvider? image;
-  final String imageUrl;
+  final Analysis analysis;
+  final bool patient;
 
-  ReportCard({
-    required this.title,
-    required this.text,
-    required this.doctor,
-    this.image,
-    this.imageUrl = '',
-  });
+  ReportCard({required this.analysis, this.patient = false});
 
   @override
   Widget build(BuildContext context) {
     return CustomBox(
+      color: patient ? Themedata.boxesColor : Themedata.constBackgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            alignment: Alignment.center,
-            child: Text(
-              title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          if (analysis.title != null)
+            Container(
+              alignment: Alignment.center,
+              child: Text(
+                analysis.title!,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
           SizedBox(
-            height: 12,
+            height: 10,
           ),
           Container(
             alignment: Alignment.center,
@@ -229,22 +225,20 @@ class ReportCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               child: SizedBox.fromSize(
                 size: Size.fromRadius(150),
-                child: image != null
-                    ? Image(image: image!, fit: BoxFit.cover)
-                    : Image.network(imageUrl, fit: BoxFit.cover),
+                child: Image.network(analysis.imgUrl, fit: BoxFit.cover),
               ),
             ),
           ),
           SizedBox(
             height: 12,
           ),
-          Text(text, style: TextStyle(fontSize: 14)),
+          if (analysis.text != null)
+            Text(analysis.text!, style: TextStyle(fontSize: 14)),
           Container(
               child: Row(
             children: [
-              Text('Др: ' + doctor,
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              // SizedBox(width: 15,),
+              Text('Yolo V8', style: TextStyle(fontWeight: FontWeight.bold)),
+              Spacer(),
               TextButton(
                 onPressed: () {},
                 child: Row(children: [
@@ -255,7 +249,7 @@ class ReportCard extends StatelessWidget {
                   foregroundColor: MaterialStateProperty.all<Color>(
                       Themedata.navBarsColor), // Цвет текста кнопки
                 ),
-              )
+              ),
             ],
           ))
         ],
@@ -401,30 +395,60 @@ class PatientDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Analysis analysis = Analysis(
+        imgUrl:
+            'https://zdorovie-feodosia.ru/upload/iblock/8a4/3k43vn9brvm2jmjyxob1dt0ndzipjqfr.webp',
+        patientId: 10,
+        text:
+            'Рентген верхней конечности в Феодосии - записаться на рентген-исследование в медцентр «ЗДОРОВЬЕ»',
+        title: 'Заголовок');
+    List analysis_list = [
+      analysis,
+      analysis,
+      analysis,
+      analysis,
+      analysis,
+      analysis,
+      analysis
+    ];
+
     return Scaffold(
-      // backgroundColor: Themedata.constBackgroundColor,
       appBar: CustomAppBar(title: ''),
       body: Padding(
         padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${patient.name} ${patient.surname}',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${patient.name} ${patient.surname}',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10),
+                  Text('Почта: ${patient.email}'),
+                  SizedBox(height: 10),
+                  if (patient.birthdate != null)
+                    Text('Дата рождения: ${patient.birthdate}'),
+                  SizedBox(height: 10),
+                  if (patient.phone != null) Text('Тел: ${patient.phone}'),
+                  SizedBox(height: 10),
+                  if (patient.selfInfo != null)
+                    Text('О себе: ${patient.selfInfo}'),
+                  SizedBox(height: 20),
+                ],
+              ),
             ),
-            SizedBox(height: 10),
-            Text('Почта: ${patient.email}'),
-            SizedBox(height: 10),
-            if (patient.birthdate != null)
-              Text('Дата рождения: ${patient.birthdate}'),
-            SizedBox(height: 10),
-            if (patient.phone != null) Text('Тел: ${patient.phone}'),
-            SizedBox(height: 10),
-            if (patient.selfInfo != null) Text('О себе: ${patient.selfInfo}'),
-            SizedBox(height: 20),
-            // Добавьте здесь другие поля, которые хотите отобразить
-            // ListView.separated(itemBuilder: itemBuilder, separatorBuilder: separatorBuilder, itemCount: itemCount)
+            SliverList.separated(
+              itemBuilder: (context, index) {
+                return ReportCard(analysis: analysis_list[index]);
+              },
+              separatorBuilder: (context, index) {
+                return SizedBox(height: 20);
+              },
+              itemCount: analysis_list.length,
+            ),
           ],
         ),
       ),
@@ -435,7 +459,8 @@ class PatientDetailsScreen extends StatelessWidget {
 // Нижняя навигация
 class CustomBottomNavigationBar extends StatefulWidget {
   final int pageIndex;
-  CustomBottomNavigationBar({required this.pageIndex});
+  final bool patient;
+  CustomBottomNavigationBar({required this.pageIndex, this.patient = false});
 
   @override
   _CustomBottomNavigationBarState createState() =>
@@ -444,14 +469,30 @@ class CustomBottomNavigationBar extends StatefulWidget {
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   int _selectedIndex = 0;
+  bool _patient = false;
 
   @override
   void initState() {
     _selectedIndex = widget.pageIndex;
+    _patient = widget.patient;
     super.initState();
   }
 
-  void _onItemTapped(int index) {
+  void _onItemTappedPatient(int index) {
+    if (_selectedIndex != index) {
+      _selectedIndex = index;
+      switch (_selectedIndex) {
+        case 0:
+          Navigator.pushReplacementNamed(context, '/patientHome');
+        case 1:
+          Navigator.pushReplacementNamed(context, '/patientAnalisis');
+        default:
+          print(index);
+      }
+    }
+  }
+
+  void _onItemTappedDoctor(int index) {
     if (_selectedIndex != index) {
       _selectedIndex = index;
       switch (_selectedIndex) {
@@ -468,24 +509,38 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Главная',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.people_alt),
-          label: 'Пациенты',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
-          label: 'Настройки',
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      selectedItemColor: Themedata.navBarsColor,
-      onTap: _onItemTapped,
-    );
+        items: _patient
+            ? const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Главная',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.text_snippet_sharp),
+                  label: 'Анализы',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings),
+                  label: 'Настройки',
+                ),
+              ]
+            : const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Главная',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.people_alt),
+                  label: 'Пациенты',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings),
+                  label: 'Настройки',
+                ),
+              ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Themedata.navBarsColor,
+        onTap: !_patient ? _onItemTappedDoctor : _onItemTappedPatient);
   }
 }
 

@@ -17,6 +17,7 @@ class DoctorDashboard extends StatefulWidget {
 
 class DdoctorDashboardState extends State<DoctorDashboard> {
   User user = User(
+      id: 0,
       birthdate: 'Ошибка',
       name: 'Ошибка',
       surname: 'Ошибка',
