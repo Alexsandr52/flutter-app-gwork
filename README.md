@@ -1,3 +1,3 @@
-# gwork_flutter_application_1
+# gwork_flutter_application
 
-A new Flutter project.
+Приложение для анализа скелетных травм
