@@ -1,32 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:gwork_flutter_application_1/api_service.dart';
 import 'package:gwork_flutter_application_1/const_themedata.dart';
-import 'package:gwork_flutter_application_1/models/analysis.dart';
 import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:gwork_flutter_application_1/widgets/widgets.dart';
 
-class AnalisisPage extends StatelessWidget {
+class AnalysisPage extends StatelessWidget {
+  final apiService = ApiService('https://alexsandr52-database-management-graduate-work-4add.twc1.net');
   final User user;
-
-  const AnalisisPage({super.key, required this.user});
+  AnalysisPage({required this.user});
 
   @override
   Widget build(BuildContext context) {
-    Analysis analysis = Analysis(
-        imgUrl:
-            'https://zdorovie-feodosia.ru/upload/iblock/8a4/3k43vn9brvm2jmjyxob1dt0ndzipjqfr.webp',
-        patientId: 10,
-        text:
-            'Рентген верхней конечности в Феодосии - записаться на рентген-исследование в медцентр «ЗДОРОВЬЕ»',
-        title: 'Заголовок');
-    List analysis_list = [
-      analysis,
-      analysis,
-      analysis,
-      analysis,
-      analysis,
-      analysis,
-      analysis
-    ];
+    
+    var analysis = () async {
+    try {
+      List<dynamic> imageInfo = await apiService.getImageInfoById(user.id);
+      print(imageInfo);
+      return imageInfo;
+    } catch (e) {
+      print('Failed to load image info: $e');
+      rethrow;
+    }
+  };
 
     return Scaffold(
       backgroundColor: Themedata.constBackgroundColor,
@@ -47,7 +42,9 @@ class AnalisisPage extends StatelessWidget {
             SliverList.separated(
               itemBuilder: (context, index) {
                 return ReportCard(
-                    patient: true, analysis: analysis_list[index]);
+                  patient: true,
+                  analysis: analysis_list[index],
+                );
               },
               separatorBuilder: (context, index) {
                 return SizedBox(height: 20);

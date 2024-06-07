@@ -460,87 +460,105 @@ class PatientDetailsScreen extends StatelessWidget {
 class CustomBottomNavigationBar extends StatefulWidget {
   final int pageIndex;
   final bool patient;
-  CustomBottomNavigationBar({required this.pageIndex, this.patient = false});
+
+  const CustomBottomNavigationBar({required this.pageIndex, this.patient = false});
 
   @override
-  _CustomBottomNavigationBarState createState() =>
-      _CustomBottomNavigationBarState();
+  _CustomBottomNavigationBarState createState() => _CustomBottomNavigationBarState();
 }
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  int _selectedIndex = 0;
-  bool _patient = false;
+  late int _selectedIndex;
+  late bool _isPatient;
 
   @override
   void initState() {
-    _selectedIndex = widget.pageIndex;
-    _patient = widget.patient;
     super.initState();
+    _selectedIndex = widget.pageIndex;
+    _isPatient = widget.patient;
   }
 
-  void _onItemTappedPatient(int index) {
+  void _onItemTapped(int index) {
     if (_selectedIndex != index) {
-      _selectedIndex = index;
-      switch (_selectedIndex) {
-        case 0:
-          Navigator.pushReplacementNamed(context, '/patientHome');
-        case 1:
-          Navigator.pushReplacementNamed(context, '/patientAnalisis');
-        default:
-          print(index);
+      setState(() {
+        _selectedIndex = index;
+      });
+      if (_isPatient) {
+        _navigateToPatientPage(index);
+      } else {
+        _navigateToDoctorPage(index);
       }
     }
   }
 
-  void _onItemTappedDoctor(int index) {
-    if (_selectedIndex != index) {
-      _selectedIndex = index;
-      switch (_selectedIndex) {
-        case 0:
-          Navigator.pushReplacementNamed(context, '/docHome');
-        case 1:
-          Navigator.pushReplacementNamed(context, '/docPatientList');
-        default:
-          print(index);
-      }
+  void _navigateToPatientPage(int index) {
+    switch (index) {
+      case 0:
+        Navigator.pushReplacementNamed(context, '/patientHome');
+        break;
+      case 1:
+        Navigator.pushReplacementNamed(context, '/patientAnalysis');
+        break;
+      case 2:
+        Navigator.pushReplacementNamed(context, '/patientSettings');
+        break;
+      default:
+        break;
+    }
+  }
+
+  void _navigateToDoctorPage(int index) {
+    switch (index) {
+      case 0:
+        Navigator.pushReplacementNamed(context, '/docHome');
+        break;
+      case 1:
+        Navigator.pushReplacementNamed(context, '/docPatientList');
+        break;
+      case 2:
+        Navigator.pushReplacementNamed(context, '/docSettings');
+        break;
+      default:
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-        items: _patient
-            ? const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Главная',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.text_snippet_sharp),
-                  label: 'Анализы',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings),
-                  label: 'Настройки',
-                ),
-              ]
-            : const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Главная',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.people_alt),
-                  label: 'Пациенты',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings),
-                  label: 'Настройки',
-                ),
-              ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Themedata.navBarsColor,
-        onTap: !_patient ? _onItemTappedDoctor : _onItemTappedPatient);
+      items: _isPatient
+          ? const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Главная',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.text_snippet_sharp),
+                label: 'Анализы',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: 'Настройки',
+              ),
+            ]
+          : const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Главная',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.people_alt),
+                label: 'Пациенты',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: 'Настройки',
+              ),
+            ],
+      currentIndex: _selectedIndex,
+      selectedItemColor: Themedata.navBarsColor,
+      onTap: _onItemTapped,
+    );
   }
 }
 

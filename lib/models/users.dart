@@ -2,8 +2,8 @@ enum Roles { patient, doctor }
 
 class User {
   final String name;
-  final String surname;
   final String email;
+  final String? surname;
   final String? birthdate;
   final String? phone;
   final String? selfInfo;
@@ -12,10 +12,10 @@ class User {
 
   const User({
     required this.name,
-    required this.surname,
     required this.email,
     required this.role,
     required this.id,
+    this.surname,
     this.birthdate,
     this.phone,
     this.selfInfo,
