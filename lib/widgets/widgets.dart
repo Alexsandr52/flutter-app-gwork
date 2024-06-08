@@ -227,32 +227,57 @@ class ReportCard extends StatelessWidget {
             ),
           SizedBox(height: 10),
           Stack(
-            children: [
-              Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(30.0)),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: SizedBox.fromSize(
-                    size: Size.fromRadius(150),
-                    child: Image.network(analysis.imgUrl, fit: BoxFit.cover),
-                  ),
-                ),
-              ),
-              if (analysis.boxes != null)
-                ...analysis.boxes!.map((box) => Positioned(
-                      left: box.x,
-                      top: box.y,
-                      child: Container(
-                        width: box.width,
-                        height: box.height,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.red, width: 2),
-                        ),
-                      ),
-                    )),
-            ],
+  children: [
+    Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(30.0)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.network(
+          analysis.imgUrl,
+          loadingBuilder: (context, child, loadingProgress) {
+            double? imageWidth;
+            double? imageHeight;
+            
+            if (loadingProgress == null) {
+              // Размеры изображения доступны после его загрузки
+              imageWidth = context.size!.width;
+              imageHeight = context.size!.height;
+            }
+
+            return child;
+          },
+        ),
+      ),
+    ),
+    if (analysis.boxes != null)
+      ...analysis.boxes!.map((box) {
+        if (imageWidth == null || imageHeight == null) {
+          // Если размеры изображения еще неизвестны, ничего не делаем
+          return Container();
+        }
+
+        final double left = (box.x / imageWidth) * imageWidth; // координата X пикселей
+        final double top = (box.y / imageHeight) * imageHeight; // координата Y пикселей
+        final double width = (box.width / imageWidth) * imageWidth; // ширина квадрата в пикселях
+        final double height = (box.height / imageHeight) * imageHeight; // высота квадрата в пикселях
+
+        return Positioned(
+          left: left,
+          top: top,
+          child: Container(
+            width: width,
+            height: height,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.red, width: 2),
+            ),
           ),
+        );
+      }).toList(),
+  ],
+),
+
+
           SizedBox(height: 12),
           if (analysis.text != null)
             Text(analysis.text!, style: TextStyle(fontSize: 14)),

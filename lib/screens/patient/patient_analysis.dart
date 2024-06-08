@@ -11,9 +11,18 @@ class AnalysisPage extends StatelessWidget {
 
   AnalysisPage({super.key, required this.user});
 
-  List<Analysis> parseAnalysis(List<dynamic> data, int patientId) {
-    return data.map((item) => Analysis.fromJson(item, patientId)).toList();
-  }
+ List<Analysis> parseAnalysis(List<dynamic> imageInfo, int patientId) {
+  return imageInfo.map((item) {
+    var analysis = Analysis.fromJson(item, patientId);
+    print('Parsed Analysis: $analysis');
+    if (analysis.boxes != null) {
+      for (var box in analysis.boxes!) {
+        print('Box in Analysis: x${box.x}, y${box.y}, w${box.width}, h${box.height}');
+      }
+    }
+    return analysis;
+  }).toList();
+}
 
   Future<List<Analysis>> fetchAnalysis() async {
     try {

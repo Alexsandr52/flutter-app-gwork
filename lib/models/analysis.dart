@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Analysis {
   final String? title;
   final String? text;
@@ -15,9 +17,11 @@ class Analysis {
 
   factory Analysis.fromJson(Map<String, dynamic> json, int patientId) {
     List<Box>? boxes;
-    if (json['boxes'] != null && json['boxes'] is Map<String, dynamic>) {
-      var boxesData = json['boxes']['boxes'] as List;
+    if (json['boxes'] != null) {
+      var jsonData = jsonDecode(json['boxes'].replaceAll('\'', '"'));
+      var boxesData = jsonData['boxes'] as List;
       boxes = boxesData.map((box) => Box.fromJson(box)).toList();
+      print(boxes);
     }
     return Analysis(
       imgUrl: json['image_data'],
