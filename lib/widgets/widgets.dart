@@ -203,6 +203,7 @@ class CustomBox extends StatelessWidget {
 }
 
 // Карты для анализов
+
 class ReportCard extends StatelessWidget {
   final Analysis analysis;
   final bool patient;
@@ -224,49 +225,62 @@ class ReportCard extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            alignment: Alignment.center,
-            decoration:
-                BoxDecoration(borderRadius: BorderRadius.circular(30.0)),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: SizedBox.fromSize(
-                size: Size.fromRadius(150),
-                child: Image.network(analysis.imgUrl, fit: BoxFit.cover),
+          SizedBox(height: 10),
+          Stack(
+            children: [
+              Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(30.0)),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox.fromSize(
+                    size: Size.fromRadius(150),
+                    child: Image.network(analysis.imgUrl, fit: BoxFit.cover),
+                  ),
+                ),
               ),
-            ),
+              if (analysis.boxes != null)
+                ...analysis.boxes!.map((box) => Positioned(
+                      left: box.x,
+                      top: box.y,
+                      child: Container(
+                        width: box.width,
+                        height: box.height,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.red, width: 2),
+                        ),
+                      ),
+                    )),
+            ],
           ),
-          SizedBox(
-            height: 12,
-          ),
+          SizedBox(height: 12),
           if (analysis.text != null)
             Text(analysis.text!, style: TextStyle(fontSize: 14)),
           Container(
-              child: Row(
-            children: [
-              Text('Yolo V8', style: TextStyle(fontWeight: FontWeight.bold)),
-              Spacer(),
-              TextButton(
-                onPressed: () {},
-                child: Row(children: [
-                  Text('Поддержка'),
-                  Icon(Icons.contact_support_outlined)
-                ]),
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(
-                      Themedata.navBarsColor), // Цвет текста кнопки
+            child: Row(
+              children: [
+                Text('Yolo V8', style: TextStyle(fontWeight: FontWeight.bold)),
+                Spacer(),
+                TextButton(
+                  onPressed: () {},
+                  child: Row(children: [
+                    Text('Поддержка'),
+                    Icon(Icons.contact_support_outlined)
+                  ]),
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all<Color>(
+                        Themedata.navBarsColor), // Цвет текста кнопки
+                  ),
                 ),
-              ),
-            ],
-          ))
+              ],
+            ),
+          )
         ],
       ),
     );
   }
 }
+
 
 // Уведомление
 class CustomNotification extends StatelessWidget {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:gwork_flutter_application_1/models/analysis.dart';
 import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -70,6 +71,7 @@ class ApiService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       _token = data['access_token'];
+      _saveToken(_token!);
       final user = get_user();
       await _saveUser(user);
       return true;
@@ -83,6 +85,10 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     final userData = jsonEncode(user.toJson());
     await prefs.setString('user', userData);
+  }
+  Future<void> _saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
   }
 
   // Register
@@ -114,7 +120,7 @@ class ApiService {
     final url = Uri.parse('$baseUrl/notifications');
     final response = await http.get(
       url,
-      headers: {'Authorization': 'Bearer $token'}, // используем токен из хранилища
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -145,20 +151,23 @@ class ApiService {
 
   // Get Image Info by ID
   Future<List<dynamic>> getImageInfoById(int patientId) async {
-    final url = Uri.parse('$baseUrl/imagebyid');
-    final response = await http.post(
-      url,
-      headers: {'Authorization': 'Bearer $_token', 'Content-Type': 'application/json'},
-      body: jsonEncode({'patient_id': patientId}),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data;
-    } else {
-      throw Exception('Failed to load image info');
-    }
+  final prefs = await SharedPreferences.getInstance();
+  final token = prefs.getString('token');
+  final url = Uri.parse('$baseUrl/imagebyid');
+  final response = await http.get(
+    url,
+    headers: {'Authorization': 'Bearer $token'},
+  );
+  print('Response Status Code: ${response.statusCode}');
+  print('Response Body: ${response.body}');
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return data;
+  } else {
+    throw Exception('Failed to load image info');
   }
+}
+
 
   // Update Image Info
   Future<String> updateImageInfo(int imageId, String status) async {

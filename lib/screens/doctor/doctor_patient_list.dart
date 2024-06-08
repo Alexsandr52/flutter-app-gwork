@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:gwork_flutter_application_1/const_themedata.dart';
-import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:gwork_flutter_application_1/widgets/widgets.dart';
 
 class DoctorPatientList extends StatefulWidget {

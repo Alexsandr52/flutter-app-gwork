@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gwork_flutter_application_1/api_service.dart';
 import 'package:gwork_flutter_application_1/const_themedata.dart';
+import 'package:gwork_flutter_application_1/models/analysis.dart';
 import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:gwork_flutter_application_1/widgets/widgets.dart';
 
@@ -10,10 +11,14 @@ class AnalysisPage extends StatelessWidget {
 
   AnalysisPage({super.key, required this.user});
 
-  Future<List<dynamic>> fetchAnalysis() async {
+  List<Analysis> parseAnalysis(List<dynamic> data, int patientId) {
+    return data.map((item) => Analysis.fromJson(item, patientId)).toList();
+  }
+
+  Future<List<Analysis>> fetchAnalysis() async {
     try {
       List<dynamic> imageInfo = await apiService.getImageInfoById(user.id);
-      return imageInfo;
+      return parseAnalysis(imageInfo, user.id);
     } catch (e) {
       print('Failed to load image info: $e');
       throw e;
@@ -27,7 +32,7 @@ class AnalysisPage extends StatelessWidget {
       appBar: CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: FutureBuilder<List<dynamic>>(
+        child: FutureBuilder<List<Analysis>>(
           future: fetchAnalysis(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {

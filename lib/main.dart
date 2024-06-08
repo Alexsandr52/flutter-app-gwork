@@ -1,19 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gwork_flutter_application_1/const_themedata.dart';
-import 'package:gwork_flutter_application_1/models/news.dart';
-import 'package:gwork_flutter_application_1/models/notif.dart';
-import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:gwork_flutter_application_1/screens/auth/auth_form.dart';
 import 'package:gwork_flutter_application_1/screens/auth/login_form.dart';
-import 'package:gwork_flutter_application_1/screens/doctor/doctor_dashboard.dart';
-import 'package:gwork_flutter_application_1/screens/doctor/doctor_patient_list.dart';
-import 'package:gwork_flutter_application_1/screens/notification_page.dart';
-import 'package:gwork_flutter_application_1/screens/patient/patient_analysis.dart';
-import 'package:gwork_flutter_application_1/screens/patient/patient_dashboard.dart';
-import 'package:gwork_flutter_application_1/screens/settings.dart';
-import 'package:gwork_flutter_application_1/widgets/widgets.dart';
 
 void main() {
   runApp(const MainApp());

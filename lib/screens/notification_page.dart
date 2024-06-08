@@ -22,7 +22,7 @@ class _NotificationPageState extends State<NotificationPage> {
     final apiService = ApiService('https://alexsandr52-database-management-graduate-work-4add.twc1.net'); // Инициализация ApiService
     try {
       final notifications = await apiService.getNotifications(); // Получаем уведомления из ApiService
-      
+      print(notifications);
       // Преобразуем список Map в список NotificationObj
       final notificationObjects = notifications.map((notification) {
         return NotificationObj(
