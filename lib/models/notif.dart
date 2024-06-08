@@ -1,7 +1,7 @@
 class NotificationObj {
-  final String title;
+  final String? title;
   final String? text;
-  final String? author;
+  final String? time;
 
-  NotificationObj({required this.title, this.author, this.text});
+  NotificationObj({this.title, this.time, this.text});
 }

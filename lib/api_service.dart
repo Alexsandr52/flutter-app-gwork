@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   final String baseUrl;
@@ -28,6 +28,9 @@ class ApiService {
       final name = payload['sub']['first_name'] as String;
       final email = payload['sub']['email'] as String;
       final surname = payload['sub']['last_name'] as String?;
+      final birthdate = payload['sub']['birthdate'] as String?;
+      final phone = payload['sub']['phone'] as String?;
+      final selfInfo = payload['sub']['self_info'] as String?;
 
       // Обработка роли
       Roles role = Roles.patient;
@@ -39,7 +42,16 @@ class ApiService {
       final id = int.parse(payload['sub']['id'].toString());
 
       // Создание и возврат объекта User
-      return User(name: name, surname: surname, email: email, role: role, id: id);
+      return User(
+        name: name,
+        email: email,
+        role: role,
+        id: id,
+        surname: surname,
+        birthdate: birthdate,
+        phone: phone,
+        selfInfo: selfInfo,
+      );
     } catch (e) {
       print('Error decoding token: $e');
       rethrow;
@@ -58,10 +70,19 @@ class ApiService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       _token = data['access_token'];
+      final user = get_user();
+      await _saveUser(user);
       return true;
     } else {
       return false;
     }
+  }
+
+  // Save user to SharedPreferences
+  Future<void> _saveUser(User user) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userData = jsonEncode(user.toJson());
+    await prefs.setString('user', userData);
   }
 
   // Register
@@ -83,10 +104,17 @@ class ApiService {
 
   // Get Notifications
   Future<List<dynamic>> getNotifications() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      throw Exception('Token is not available');
+    }
+
     final url = Uri.parse('$baseUrl/notifications');
     final response = await http.get(
       url,
-      headers: {'Authorization': 'Bearer $_token'},
+      headers: {'Authorization': 'Bearer $token'}, // используем токен из хранилища
     );
 
     if (response.statusCode == 200) {

@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gwork_flutter_application_1/const_themedata.dart';
@@ -7,6 +9,11 @@ import 'package:gwork_flutter_application_1/models/analysis.dart';
 import 'package:gwork_flutter_application_1/models/news.dart';
 import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:gwork_flutter_application_1/models/notif.dart';
+import 'package:gwork_flutter_application_1/screens/notification_page.dart';
+import 'package:gwork_flutter_application_1/screens/patient/patient_analysis.dart';
+import 'package:gwork_flutter_application_1/screens/patient/patient_dashboard.dart';
+import 'package:gwork_flutter_application_1/screens/settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Верхний бар
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -24,7 +31,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ? [
               IconButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/notification');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => NotificationPage()),
+                    );
                     // Navigator.pushNamed(context, routeName)
                     // builder: (context) => NotificationPage(),
                   },
@@ -262,8 +272,17 @@ class ReportCard extends StatelessWidget {
 class CustomNotification extends StatelessWidget {
   final NotificationObj notif;
 
-  // Конструктор с аргументом username и значением по умолчанию "Имя пользователя"
   CustomNotification({required this.notif});
+
+  factory CustomNotification.fromMap(Map<String, dynamic> data) {
+    return CustomNotification(
+      notif: NotificationObj(
+        title: data['notification_title'] ?? 'Уведомление',
+        text: data['notification_text'],
+        time: data['notification_time'],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -290,31 +309,32 @@ class CustomNotification extends StatelessWidget {
                 SizedBox(
                   height: 5,
                 ),
-                if (notif.author != null)
-                  Text(notif.author!,
+                if (notif.time != null)
+                  Text(notif.time!,
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ],
             ),
           ),
-          // Spacer(),
-          TextButton(
-            // TODO
-            onPressed: () {},
-            child: Text('Удалить'),
-            style: ButtonStyle(
-              foregroundColor:
-                  MaterialStateProperty.all<Color>(Themedata.navBarsColor),
-            ),
-          )
+          // TextButton(
+          //   onPressed: () {
+          //     // TODO: Implement delete functionality
+          //   },
+          //   child: Text('Удалить'),
+          //   style: ButtonStyle(
+          //     foregroundColor:
+          //         MaterialStateProperty.all<Color>(Themedata.navBarsColor),
+          //   ),
+          // )
         ],
       ),
       onTap: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    NotificationDetailsScreen(notificationObj: notif)));
+          context,
+          MaterialPageRoute(
+            builder: (context) => NotificationDetailsScreen(notificationObj: notif),
+          ),
+        );
       },
     );
   }
@@ -349,8 +369,8 @@ class NotificationDetailsScreen extends StatelessWidget {
           SizedBox(
             height: 5,
           ),
-          if (notificationObj.author != null)
-            Text(notificationObj.author!,
+          if (notificationObj.time != null)
+            Text(notificationObj.time!,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ],
       ),
@@ -470,12 +490,24 @@ class CustomBottomNavigationBar extends StatefulWidget {
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   late int _selectedIndex;
   late bool _isPatient;
+  User? user; // добавляем переменную для пользователя
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.pageIndex;
     _isPatient = widget.patient;
+    _loadUser(); // загружаем пользователя при инициализации
+  }
+
+  Future<void> _loadUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userData = prefs.getString('user');
+    if (userData != null) {
+      setState(() {
+        user = User.fromJson(jsonDecode(userData));
+      });
+    }
   }
 
   void _onItemTapped(int index) {
@@ -492,15 +524,31 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   }
 
   void _navigateToPatientPage(int index) {
+    if (user == null) {
+      print('User is not loaded yet');
+      return;
+    }
     switch (index) {
       case 0:
-        Navigator.pushReplacementNamed(context, '/patientHome');
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => PatientDashbord(user: user!)),
+          (route) => false,
+        );
         break;
       case 1:
-        Navigator.pushReplacementNamed(context, '/patientAnalysis');
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => AnalysisPage(user: user!)),
+          (route) => false,
+        );
         break;
       case 2:
-        Navigator.pushReplacementNamed(context, '/patientSettings');
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => SettingsPage(patient:true)),
+          (route) => false,
+        );
         break;
       default:
         break;
@@ -508,6 +556,10 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   }
 
   void _navigateToDoctorPage(int index) {
+    if (user == null) {
+      print('User is not loaded yet');
+      return;
+    }
     switch (index) {
       case 0:
         Navigator.pushReplacementNamed(context, '/docHome');

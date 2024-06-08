@@ -2,11 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:gwork_flutter_application_1/const_themedata.dart';
-import 'package:gwork_flutter_application_1/models/notif.dart';
+// import 'package:gwork_flutter_application_1/models/notif.dart';
 import 'package:gwork_flutter_application_1/widgets/widgets.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+
+  final bool patient;
+
+  const SettingsPage({super.key, this.patient = false});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class SettingsPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(pageIndex: 2),
+      bottomNavigationBar: CustomBottomNavigationBar(pageIndex: 2, patient: patient,),
     );
   }
 }
