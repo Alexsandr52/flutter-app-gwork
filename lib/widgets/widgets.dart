@@ -236,13 +236,13 @@ class ReportCard extends StatelessWidget {
         child: Image.network(
           analysis.imgUrl,
           loadingBuilder: (context, child, loadingProgress) {
-            double? imageWidth;
-            double? imageHeight;
+            // double? imageWidth;
+            // double? imageHeight;
             
             if (loadingProgress == null) {
               // Размеры изображения доступны после его загрузки
-              imageWidth = context.size!.width;
-              imageHeight = context.size!.height;
+              // imageWidth = context.size!.width;
+              // imageHeight = context.size!.height;
             }
 
             return child;
@@ -252,15 +252,20 @@ class ReportCard extends StatelessWidget {
     ),
     if (analysis.boxes != null)
       ...analysis.boxes!.map((box) {
-        if (imageWidth == null || imageHeight == null) {
-          // Если размеры изображения еще неизвестны, ничего не делаем
-          return Container();
-        }
+        // if (imageWidth == null || imageHeight == null) {
+        //   // Если размеры изображения еще неизвестны, ничего не делаем
+        //   return Container();
+        // }
 
-        final double left = (box.x / imageWidth) * imageWidth; // координата X пикселей
-        final double top = (box.y / imageHeight) * imageHeight; // координата Y пикселей
-        final double width = (box.width / imageWidth) * imageWidth; // ширина квадрата в пикселях
-        final double height = (box.height / imageHeight) * imageHeight; // высота квадрата в пикселях
+        // final double left = (box.x / imageWidth) * imageWidth; // координата X пикселей
+        // final double top = (box.y / imageHeight) * imageHeight; // координата Y пикселей
+        // final double width = (box.width / imageWidth) * imageWidth; // ширина квадрата в пикселях
+        // final double height = (box.height / imageHeight) * imageHeight; // высота квадрата в пикселях
+        
+        final double left = box.x; // координата X пикселей
+        final double top = box.y; // координата Y пикселей
+        final double width = box.width; // ширина квадрата в пикселях
+        final double height = box.height; // высота квадрата в пикселях
 
         return Positioned(
           left: left,
