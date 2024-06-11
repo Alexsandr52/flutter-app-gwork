@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:gwork_flutter_application_1/api_service.dart';
 import 'package:gwork_flutter_application_1/const_themedata.dart';
+import 'package:gwork_flutter_application_1/screens/doctor/doctor_dashboard.dart';
 import 'package:gwork_flutter_application_1/screens/patient/patient_dashboard.dart';
 import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:gwork_flutter_application_1/widgets/widgets.dart';
@@ -121,12 +122,12 @@ class _LoginFormState extends State<LoginForm> {
     return InkWell(
       onTap: () async {
         if (_formKey.currentState!.validate()) {
-
-          bool success = await apiService.login(emailController.text, passController.text);
+          try{
+            bool success = await apiService.login(emailController.text, passController.text);
           if (success) {
-            User user = apiService.get_user();
+            User user = apiService.getUser();
             if (user.role == Roles.patient){Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => PatientDashbord(user: user)),);}
-            else{Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => PatientDashbord(user: user)),);}
+            else{Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => DoctorDashboard(user: user)),);}
 
           } else {
              showDialog<String>(
@@ -143,6 +144,22 @@ class _LoginFormState extends State<LoginForm> {
               ),
             );
           }
+          }catch(e){
+            showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: Text('$e'),
+                content: const Text('хуй'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            );
+          }
+          
         }
       },
       child: Container(

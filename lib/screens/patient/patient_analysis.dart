@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, use_super_parameters, use_rethrow_when_possible, avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:gwork_flutter_application_1/api_service.dart';
 import 'package:gwork_flutter_application_1/const_themedata.dart';
@@ -9,20 +11,11 @@ class AnalysisPage extends StatelessWidget {
   final ApiService apiService = ApiService('https://alexsandr52-database-management-graduate-work-4add.twc1.net');
   final User user;
 
-  AnalysisPage({super.key, required this.user});
+  AnalysisPage({Key? key, required this.user}) : super(key: key);
 
- List<Analysis> parseAnalysis(List<dynamic> imageInfo, int patientId) {
-  return imageInfo.map((item) {
-    var analysis = Analysis.fromJson(item, patientId);
-    print('Parsed Analysis: $analysis');
-    if (analysis.boxes != null) {
-      for (var box in analysis.boxes!) {
-        print('Box in Analysis: x${box.x}, y${box.y}, w${box.width}, h${box.height}');
-      }
-    }
-    return analysis;
-  }).toList();
-}
+  List<Analysis> parseAnalysis(List<dynamic> imageInfo, int patientId) {
+    return imageInfo.map((item) => Analysis.fromJson(item, patientId)).toList();
+  }
 
   Future<List<Analysis>> fetchAnalysis() async {
     try {
@@ -47,7 +40,7 @@ class AnalysisPage extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              return Center(child: Text('Ошибка загрузки данных: ${snapshot.error}'));
+              return Center(child: Text('Данные не найдены'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(child: Text('Данные не найдены'));
             } else {
@@ -70,9 +63,7 @@ class AnalysisPage extends StatelessWidget {
                         analysis: analysisList[index],
                       );
                     },
-                    separatorBuilder: (context, index) {
-                      return SizedBox(height: 20);
-                    },
+                    separatorBuilder: (context, index) => SizedBox(height: 20),
                     itemCount: analysisList.length,
                   ),
                 ],

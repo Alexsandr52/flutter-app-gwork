@@ -12,17 +12,18 @@ class DoctorDashboard extends StatefulWidget {
   const DoctorDashboard({this.news, this.user});
 
   @override
-  State<DoctorDashboard> createState() => DdoctorDashboardState();
+  State<DoctorDashboard> createState() => _DoctorDashboardState();
 }
 
-class DdoctorDashboardState extends State<DoctorDashboard> {
+class _DoctorDashboardState extends State<DoctorDashboard> {
   User user = User(
-      id: 0,
-      birthdate: 'Ошибка',
-      name: 'Ошибка',
-      surname: 'Ошибка',
-      email: 'Ошибка',
-      role: Roles.patient);
+    id: 0,
+    birthdate: 'Ошибка',
+    name: 'Ошибка',
+    surname: 'Ошибка',
+    email: 'Ошибка',
+    role: Roles.patient,
+  );
 
   List pageObj = [];
 
@@ -46,28 +47,23 @@ class DdoctorDashboardState extends State<DoctorDashboard> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: CustomScrollView(
           slivers: [
-            // SliverList(delegate: Sliver)
             SliverToBoxAdapter(
-                child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: ProfileCard(user: user),
-            )),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: ProfileCard(user: user),
+              ),
+            ),
             SliverList.separated(
               itemBuilder: (context, index) {
                 return NewsBox(news: pageObj[index]);
               },
-              separatorBuilder: (context, index) {
-                return SizedBox(height: 10);
-              },
+              separatorBuilder: (context, index) => SizedBox(height: 10),
               itemCount: pageObj.length,
             )
           ],
-          // child: Padding(
-          //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-          // ProfileCard(user: user)
         ),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(pageIndex: 0),
+      bottomNavigationBar: CustomBottomNavigationBarDoctor(pageIndex: 0),
     );
   }
 }

@@ -24,7 +24,9 @@ class SettingsPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(pageIndex: 2, patient: patient,),
+      bottomNavigationBar: patient 
+        ? CustomBottomNavigationBar(pageIndex: 2, patient: patient)
+        : CustomBottomNavigationBarDoctor(pageIndex: 2),
     );
   }
 }

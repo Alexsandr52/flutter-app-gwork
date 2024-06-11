@@ -19,24 +19,18 @@ class PatientDashbord extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: CustomScrollView(
           slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  SizedBox(height: 10),
-                  ProfileCard(user: user),
-                  SizedBox(height: 10),
-                ],
+            SliverPadding(
+              padding: const EdgeInsets.only(top: 10),
+              sliver: SliverToBoxAdapter(
+                child: ProfileCard(user: user),
               ),
             ),
             if (news != null)
               SliverList.separated(
-                  itemBuilder: (context, index) {
-                    return NewsBox(news: news![index]);
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(height: 10);
-                  },
-                  itemCount: news!.length)
+                itemBuilder: (context, index) => NewsBox(news: news![index]),
+                separatorBuilder: (context, index) => SizedBox(height: 10),
+                itemCount: news!.length,
+              ),
           ],
         ),
       ),
@@ -45,6 +39,5 @@ class PatientDashbord extends StatelessWidget {
         pageIndex: 0,
       ),
     );
-    
   }
 }

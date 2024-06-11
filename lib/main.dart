@@ -13,8 +13,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-
     return MaterialApp(
       theme: ThemeData(
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -27,9 +25,10 @@ class MainApp extends StatelessWidget {
               borderRadius: BorderRadius.circular(35),
             ),
             textStyle: const TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.normal),
+              fontSize: 16,
+              color: Colors.white,
+              fontWeight: FontWeight.normal,
+            ),
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             side: BorderSide.none,
           ),
@@ -40,7 +39,7 @@ class MainApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginForm(),
         '/auth': (context) => AuthForm(),
-        // '/patientHome': (context) => ,
+        // '/patientHome': (context) => , // Разкомментируйте и добавьте виджет для главной страницы пациента
       },
     );
   }
