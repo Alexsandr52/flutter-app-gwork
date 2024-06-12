@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:gwork_flutter_application_1/models/news.dart';
 import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -275,6 +276,18 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Error getting patient info: $e');
+    }
+  }
+
+// Метод для получения новостей
+  Future<List<News>> fetchNews() async {
+    final response = await http.get(Uri.parse('$baseUrl/news'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> newsList = json.decode(response.body);
+      return newsList.map((json) => News.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load news');
     }
   }
 }

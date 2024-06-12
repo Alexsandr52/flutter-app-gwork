@@ -225,25 +225,6 @@ class ReportCard extends StatelessWidget {
                   ),
                 ),
               ),
-              if (analysis.boxes != null)
-                ...analysis.boxes!.map((box) {
-                  final double left = box.x;
-                  final double top = box.y;
-                  final double width = box.width;
-                  final double height = box.height;
-
-                  return Positioned(
-                    left: left,
-                    top: top,
-                    child: Container(
-                      width: width,
-                      height: height,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.red, width: 2),
-                      ),
-                    ),
-                  );
-                }).toList(),
             ],
           ),
           SizedBox(height: 12),
