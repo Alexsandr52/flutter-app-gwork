@@ -315,4 +315,59 @@ class ApiService {
       throw Exception('Failed to upload image: $responseBody');
     }
   }
+
+  Future<Map<String, dynamic>> updateUserInfo(
+    int userId, {
+    String? newFirstName,
+    String? newLastName,
+    String? newEmail,
+    String? newPhoneNumber,
+    String? newPersonalData,
+  }) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+      
+      if (token == null) {
+        return {'error': 'Токен не найден. Пожалуйста, выполните вход.'};
+      }
+
+      final url = Uri.parse('$baseUrl/user_settings');
+      final Map<String, dynamic> requestBody = {
+        'user_id': userId,
+        if (newFirstName != null) 'new_first_name': newFirstName,
+        if (newLastName != null) 'new_last_name': newLastName,
+        if (newEmail != null) 'new_email': newEmail,
+        if (newPhoneNumber != null) 'new_phone_number': newPhoneNumber,
+        if (newPersonalData != null) 'new_personal_data': newPersonalData,
+      };
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else if (response.statusCode == 400) {
+        return {'error': 'Некорректные данные. Проверьте введенные данные.'};
+      } else if (response.statusCode == 401) {
+        return {'error': 'Неавторизованный доступ. Пожалуйста, выполните вход.'};
+      } else if (response.statusCode == 403) {
+        return {'error': 'Доступ запрещен.'};
+      } else if (response.statusCode == 404) {
+        return {'error': 'Пользователь не найден.'};
+      } else {
+        return {'error': 'Ошибка обновления данных. Попробуйте снова.'};
+      }
+    } catch (e) {
+      return {'error': 'Произошла ошибка: $e'};
+    }
+  }
 }
