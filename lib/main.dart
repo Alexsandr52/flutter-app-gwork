@@ -1,35 +1,29 @@
-// ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:gwork_flutter_application_1/const_themedata.dart';
 import 'package:gwork_flutter_application_1/screens/auth/auth_form.dart';
 import 'package:gwork_flutter_application_1/screens/auth/login_form.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(MainApp());
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  const MainApp({Key? key}) : super(key: key); // Исправлено объявление конструктора
 
   @override
   Widget build(BuildContext context) {
-    
-
     return MaterialApp(
       theme: ThemeData(
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            elevation: 4,
-            foregroundColor: Colors.white,
-            backgroundColor: Themedata.navBarsColor,
-            disabledBackgroundColor: Themedata.constBackgroundColor,
+            foregroundColor: Colors.white, backgroundColor: Themedata.navBarsColor, elevation: 4, // Использование onPrimary для текста
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(35),
             ),
             textStyle: const TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.normal),
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+            ),
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             side: BorderSide.none,
           ),
@@ -40,7 +34,6 @@ class MainApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginForm(),
         '/auth': (context) => AuthForm(),
-        // '/patientHome': (context) => ,
       },
     );
   }

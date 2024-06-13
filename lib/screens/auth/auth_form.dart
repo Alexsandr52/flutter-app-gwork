@@ -167,7 +167,7 @@ class _AuthFormState extends State<AuthForm> {
             
             bool success = await apiService.login(emailController.text, passController.text);
             if (success) {
-              User user = apiService.get_user();
+              User user = apiService.getUser();
               if (user.role == Roles.patient){Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => PatientDashbord(user: user)), (route) => false,);}
               else{Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => PatientDashbord(user: user)), (route) => false,);}
 

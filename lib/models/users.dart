@@ -24,14 +24,14 @@ class User {
   // Метод fromJson для создания объекта User из JSON-данных
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      name: json['name'],
-      email: json['email'],
-      role: Roles.values[json['role']],
-      id: json['id'],
-      surname: json['surname'],
+      name: json['first_name'] ?? '', // Если поле 'name' отсутствует, используем пустую строку
+      email: json['email'] ?? '',
+      role: Roles.values[json['role']?? 0],
+      id: json['id'] ?? 0,
+      surname: json['last_name'],
       birthdate: json['birthdate'],
-      phone: json['phone'],
-      selfInfo: json['selfInfo'],
+      phone: json['phone_number'],
+      selfInfo: json['other_personal_data'],
     );
   }
 
