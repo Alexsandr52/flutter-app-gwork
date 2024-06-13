@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:gwork_flutter_application_1/models/news.dart';
 import 'package:gwork_flutter_application_1/models/users.dart';
 import 'package:http/http.dart' as http;
@@ -288,6 +289,30 @@ class ApiService {
       return newsList.map((json) => News.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load news');
+    }
+  }
+
+  Future<void> uploadImage(int patientId, File imageFile) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      throw Exception('Token is not available');
+    }
+
+    final url = Uri.parse('$baseUrl/sendimagebyid');
+    final request = http.MultipartRequest('POST', url);
+
+    // Добавляем заголовки и поля формы
+    request.headers['Authorization'] = 'Bearer $token';
+    request.fields['patient_id'] = patientId.toString();
+    request.files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+
+    final response = await request.send();
+
+    if (response.statusCode != 200) {
+      final responseBody = await response.stream.bytesToString();
+      throw Exception('Failed to upload image: $responseBody');
     }
   }
 }

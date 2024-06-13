@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
 
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gwork_flutter_application_1/api_service.dart';
 import 'package:gwork_flutter_application_1/const_themedata.dart';
@@ -14,7 +15,9 @@ import 'package:gwork_flutter_application_1/screens/notification_page.dart';
 import 'package:gwork_flutter_application_1/screens/patient/patient_analysis.dart';
 import 'package:gwork_flutter_application_1/screens/patient/patient_dashboard.dart';
 import 'package:gwork_flutter_application_1/screens/settings.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // Верхний бар
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -188,6 +191,26 @@ class ReportCard extends StatelessWidget {
 
   ReportCard({required this.analysis, this.patient = false});
 
+  Future<void> _sendEmail(BuildContext context) async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'ak.polyanskiy@gmail.com',
+      queryParameters: {
+        'subject': 'Запрос на поддержку',
+        'body': 'Опишите вашу проблему здесь...',
+        'attachment': analysis.imgUrl, // Предполагается, что imgUrl содержит ссылку на изображение
+      },
+    );
+
+    if (await canLaunch(emailLaunchUri.toString())) {
+      await launch(emailLaunchUri.toString());
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Не удалось открыть приложение почты')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomBox(
@@ -198,7 +221,8 @@ class ReportCard extends StatelessWidget {
           if (analysis.title != null)
             Container(
               alignment: Alignment.center,
-              child: Text('Статус обработки "${analysis.title!}"',
+              child: Text(
+                'Статус обработки "${analysis.title!}"',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
@@ -216,9 +240,10 @@ class ReportCard extends StatelessWidget {
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;
                       return Center(
-                        child: CircularProgressIndicator(value: loadingProgress.expectedTotalBytes != null 
-                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                            : null,
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                              : null,
                         ),
                       );
                     },
@@ -236,7 +261,7 @@ class ReportCard extends StatelessWidget {
                 Text('Yolo V8', style: TextStyle(fontWeight: FontWeight.bold)),
                 Spacer(),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => _sendEmail(context),
                   child: Row(
                     children: [
                       Text('Поддержка'),
@@ -410,11 +435,18 @@ class PatientCard extends StatelessWidget {
 }
 
 // Страница с деталями для пациента
-class PatientDetailsScreen extends StatelessWidget {
+class PatientDetailsScreen extends StatefulWidget {
   final User patient;
-  final ApiService apiService = ApiService('https://alexsandr52-database-management-graduate-work-4add.twc1.net');
 
   PatientDetailsScreen({required this.patient});
+
+  @override
+  _PatientDetailsScreenState createState() => _PatientDetailsScreenState();
+}
+
+class _PatientDetailsScreenState extends State<PatientDetailsScreen> {
+  final ApiService apiService = ApiService('https://alexsandr52-database-management-graduate-work-4add.twc1.net');
+  final ImagePicker _picker = ImagePicker();
 
   Future<List<Analysis>> fetchAnalysis(int patientId) async {
     try {
@@ -430,11 +462,41 @@ class PatientDetailsScreen extends StatelessWidget {
     return imageInfo.map((item) => Analysis.fromJson(item, patientId)).toList();
   }
 
+  Future<void> _uploadImage(BuildContext context) async {
+    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      try {
+        await apiService.uploadImage(widget.patient.id, imageFile);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Image uploaded successfully')),
+          );
+          setState(() {});
+        }
+      } catch (e) {
+        print('Failed to upload image: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to upload image')),
+          );
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Пациент id ${patient.id}'),
+        title: Text('Пациент id ${widget.patient.id}'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.upload),
+            onPressed: () => _uploadImage(context),
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(16),
@@ -445,20 +507,20 @@ class PatientDetailsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${patient.name} ${patient.surname ?? ''}',
+                    '${widget.patient.name} ${widget.patient.surname ?? ''}',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10),
-                  Text('Почта: ${patient.email}'),
+                  Text('Почта: ${widget.patient.email}'),
                   SizedBox(height: 10),
-                  if (patient.birthdate != null)
-                    Text('Дата рождения: ${patient.birthdate}'),
+                  if (widget.patient.birthdate != null)
+                    Text('Дата рождения: ${widget.patient.birthdate}'),
                   SizedBox(height: 10),
-                  if (patient.phone != null)
-                    Text('Тел: ${patient.phone}'),
+                  if (widget.patient.phone != null)
+                    Text('Тел: ${widget.patient.phone}'),
                   SizedBox(height: 10),
-                  if (patient.selfInfo != null)
-                    Text('О себе: ${patient.selfInfo}'),
+                  if (widget.patient.selfInfo != null)
+                    Text('О себе: ${widget.patient.selfInfo}'),
                   SizedBox(height: 20),
                   Divider(thickness: 2),
                   Text(
@@ -470,7 +532,7 @@ class PatientDetailsScreen extends StatelessWidget {
               ),
             ),
             FutureBuilder<List<Analysis>>(
-              future: fetchAnalysis(patient.id),
+              future: fetchAnalysis(widget.patient.id),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return SliverToBoxAdapter(
@@ -478,7 +540,7 @@ class PatientDetailsScreen extends StatelessWidget {
                   );
                 } else if (snapshot.hasError) {
                   return SliverToBoxAdapter(
-                    child: Center(child: Text('Ошибка загрузки данных $snapshot.hasError')),
+                    child: Center(child: Text('Ошибка загрузки данных ${snapshot.error}')),
                   );
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return SliverToBoxAdapter(
@@ -575,7 +637,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       case 2:
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => SettingsPage(patient: true)),
+          MaterialPageRoute(builder: (context) => SettingsPage(user: user!)),
           (route) => false,
         );
         break;
@@ -743,7 +805,7 @@ class _CustomBottomNavigationBarDoctorState
       case 2:
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => SettingsPage()),
+          MaterialPageRoute(builder: (context) => SettingsPage(user: user!)),
           (route) => false,
         );
         break;

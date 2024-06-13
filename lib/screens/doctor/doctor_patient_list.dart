@@ -28,12 +28,6 @@ class _DoctorPatientListState extends State<DoctorPatientList> {
     try {
       // Получаем список ID пациентов
       List<int> patientIds = await apiService.getPatientsByDoctor();
-
-      // print(patientIds);
-
-      // List<dynamic> a = await apiService.postImageInfoByIdDoctor(patientIds[0]);
-      // print(a);
-      
       // Загрузка информации о пациентах по их ID
       List<User> fetchedPatients = [];
       for (int id in patientIds) {

@@ -149,7 +149,7 @@ class _LoginFormState extends State<LoginForm> {
               context: context,
               builder: (BuildContext context) => AlertDialog(
                 title: Text('$e'),
-                content: const Text('хуй'),
+                content: const Text('что то не так'),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'OK'),
