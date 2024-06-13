@@ -145,7 +145,13 @@ class ProfileCard extends StatelessWidget {
             SizedBox(
               width: double.maxFinite,
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingsPage(user: user!)),
+                    (route) => false,
+                  );
+                },
                 label: Text('Изменить'),
                 icon: Icon(Icons.edit),
               ),
